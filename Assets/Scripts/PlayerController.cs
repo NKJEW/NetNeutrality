@@ -12,7 +12,8 @@ public class PlayerController : MonoBehaviour {
     Vector2Int quedMovement = Vector2Int.zero;
 
 	void Start () {
-		
+        lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
+        ExecuteMove(false);
 	}
 	
 	void Update () {
