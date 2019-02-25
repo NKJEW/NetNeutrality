@@ -113,6 +113,14 @@ public class PathfindingMap : MonoBehaviour {
         }
     }
 
+    public bool CanWalkOnTile(Vector3 worldPos) {
+        return CanWalkOnTile(WorldToTilePos(worldPos));
+    }
+
+    public bool CanWalkOnTile(TilePos tilePos) {
+        return pathfindingGrid[tilePos.x, tilePos.y].walkable;
+    }
+
     public static int MaxSize {
         get { return (xSize * ySize); }
     }
