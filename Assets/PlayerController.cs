@@ -52,6 +52,11 @@ public class PlayerController : MonoBehaviour {
             curMovement = quedMovement;
             quedMovement = Vector2Int.zero;
         }
+
+        // stop player if moving onto invalid tile
+        if (!MoveValid(curMovement)) {
+            curMovement = Vector2Int.zero;
+        }
     }
 
     void AttemptMove (Vector2Int move)
@@ -68,6 +73,9 @@ public class PlayerController : MonoBehaviour {
 
     bool MoveValid (Vector2Int move) {
         Vector2Int tilePos = lastTile + move;
+        //if (tilePos == Vector2Int.zero) {
+        //    return false;
+        //}
         // TODO check tile
         return true;
     }
