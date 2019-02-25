@@ -73,9 +73,6 @@ public class PlayerController : MonoBehaviour {
 
     bool MoveValid (Vector2Int move) {
         Vector2Int tilePos = lastTile + move;
-        //if (tilePos == Vector2Int.zero) {
-        //    return false;
-        //}
         // TODO check tile
         return true;
     }
