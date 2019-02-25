@@ -73,7 +73,10 @@ public class PlayerController : MonoBehaviour {
 
     bool MoveValid (Vector2Int move) {
         Vector2Int tilePos = lastTile + move;
-        // TODO check tile
-        return true;
+        if (PathfindingMap.CanWalkOnTile(new TilePos(tilePos.x, tilePos.y))) {
+            return true;
+        } else {
+            return false;
+        }
     }
 }
