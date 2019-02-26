@@ -38,19 +38,19 @@ public class MapLoader : MonoBehaviour {
     public Texture2D mapTexture;
 
     public MapTileData[] publicTileData;
-    private Dictionary<Color32, MapTileData> tileData = new Dictionary<Color32, MapTileData>();
+    Dictionary<Color32, MapTileData> tileData = new Dictionary<Color32, MapTileData>();
 
-    private GameTile[,] tiles;
+    GameTile[,] tiles;
 
     //private string backgroundMatName = "Background_Mat";
     //private Material backgroundMat;
 
-    private int width;
-    private int height;
+    int width;
+    int height;
 
     //private GameObject enemySpawner;
 
-    private enum CardinalDirection {
+    enum CardinalDirection {
         NorthWest = 0,
         North = 1,
         NorthEast = 2,
@@ -61,7 +61,7 @@ public class MapLoader : MonoBehaviour {
         SouthEast = 7
     }
 
-    private Dictionary<int, int> bitmaskValueToIndex = new Dictionary<int, int>() {
+    Dictionary<int, int> bitmaskValueToIndex = new Dictionary<int, int>() {
         {0, 47},
         {2, 1},
         {8, 2},
@@ -111,7 +111,8 @@ public class MapLoader : MonoBehaviour {
         {255, 46}
     };
 
-    private PathfindingMap path;
+    PathfindingMap path;
+    BlockPlacer blocker;
 
     void Awake() {
         //load resources
@@ -119,6 +120,7 @@ public class MapLoader : MonoBehaviour {
         //backgroundMat = Resources.Load (backgroundMatName) as Material;
 
         path = FindObjectOfType<PathfindingMap>();
+        blocker = FindObjectOfType<BlockPlacer>();
 
         LoadTilesIntoDictionary();
         LoadMap();
@@ -176,12 +178,12 @@ public class MapLoader : MonoBehaviour {
                 Color32 currentPixel = pixels[(y * width) + x];
                 tiles[x, y] = new GameTile();
                 tiles[x, y].color = currentPixel;
-                print("(" + x + ", " + y + "): " + currentPixel.ToString());
                 if (currentPixel.a == 0) {
                     tiles[x, y].tile = null;
                     tiles[x, y].walkable = true;
 
                     path.AddTile(true, x, y);
+                    blocker.AddFreeTile(new Vector3(x, y, 0));
                 } else {
                     GameObject newTile = CreateVisibleTileAtPosition(currentPixel, x, y);
 
@@ -190,12 +192,15 @@ public class MapLoader : MonoBehaviour {
                         tiles[x, y].walkable = tileData[currentPixel].walkable;
 
                         path.AddTile(tileData[currentPixel].walkable, x, y);
+                        if (tileData[currentPixel].walkable) {
+                            blocker.AddFreeTile(new Vector3(x, y, 0));
+                        }
                     } else {
-                        print("bruh");
                         tiles[x, y].tile = null;
                         tiles[x, y].walkable = true;
 
                         path.AddTile(true, x, y);
+                        blocker.AddFreeTile(new Vector3(x, y, 0));
                     }
 
                     /*if (tileData [currentPixel].enemy)

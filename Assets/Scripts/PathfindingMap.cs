@@ -87,6 +87,10 @@ public class PathfindingMap : MonoBehaviour {
         pathfindingGrid[x, y] = newNode;
     }
 
+    public static void UpdateTile(bool walkable, int x, int y) {
+        pathfindingGrid[x, y].walkable = walkable;
+    }
+
     public void AddNeighbors() {
         for (int x = 0; x < xSize; x++) {
             for (int y = 0; y < ySize; y++) {
