@@ -8,11 +8,13 @@ public class BlockPlacer : MonoBehaviour {
 
     List<Vector3> freeTiles = new List<Vector3>();
     PlayerController player;
+    MapLoader map;
 
     float nextBlockPlacement;
 
 	void Start() {
         player = FindObjectOfType<PlayerController>();
+        map = FindObjectOfType<MapLoader>();
 	}
 
 	public void AddFreeTile(Vector3 pos) {
@@ -41,8 +43,10 @@ public class BlockPlacer : MonoBehaviour {
     void PlaceBlock() {
         Vector3 pos = GetRandomPos();
 
-        Instantiate(block, pos, Quaternion.identity);
+        GameObject newObstacle = Instantiate(block, pos, Quaternion.identity);
         freeTiles.Remove(pos);
-        PathfindingMap.UpdateTile(false, Mathf.RoundToInt(pos.x), Mathf.RoundToInt(pos.y));
+        TilePos tilePos = PathfindingMap.WorldToTilePos(pos);
+        PathfindingMap.UpdateTile(false, tilePos.x, tilePos.y);
+        map.AddObstacle(newObstacle, tilePos.x, tilePos.y);
     }
 }

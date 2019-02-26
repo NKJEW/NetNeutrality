@@ -14,13 +14,11 @@ public class MapTileData {
 
     [HideInInspector]
     public GameObject prefab;
-    [HideInInspector]
-    public BitmaskSprite[] bitmaskSprites;
 }
 
 public class GameTile {
     public GameObject tile;
-    public Color32 color;
+    public bool usesBitmask;
     public bool walkable;
 }
 
@@ -39,6 +37,7 @@ public class MapLoader : MonoBehaviour {
 
     public MapTileData[] publicTileData;
     Dictionary<Color32, MapTileData> tileData = new Dictionary<Color32, MapTileData>();
+    BitmaskSprite[] bitmaskSprites;
 
     GameTile[,] tiles;
 
@@ -122,6 +121,8 @@ public class MapLoader : MonoBehaviour {
         path = FindObjectOfType<PathfindingMap>();
         blocker = FindObjectOfType<BlockPlacer>();
 
+        bitmaskSprites = LoadBitmaskSprites("Border");
+
         LoadTilesIntoDictionary();
         LoadMap();
     }
@@ -140,9 +141,6 @@ public class MapLoader : MonoBehaviour {
             //    }
             //    mapTile.prefab = enemySpawner;
             //}
-
-            if (mapTile.usesBitmask)
-                mapTile.bitmaskSprites = LoadBitmaskSprites(mapTile.prefabName);
 
             tileData.Add(mapTile.color, mapTile);
         }
@@ -177,36 +175,37 @@ public class MapLoader : MonoBehaviour {
             for (int y = 0; y < height; y++) {
                 Color32 currentPixel = pixels[(y * width) + x];
                 tiles[x, y] = new GameTile();
-                tiles[x, y].color = currentPixel;
                 if (currentPixel.a == 0) {
                     tiles[x, y].tile = null;
                     tiles[x, y].walkable = true;
+                    tiles[x, y].usesBitmask = false;
 
                     path.AddTile(true, x, y);
-                    blocker.AddFreeTile(new Vector3(x, y, 0));
                 } else {
                     GameObject newTile = CreateVisibleTileAtPosition(currentPixel, x, y);
 
                     if (tileData[currentPixel].terrain) {
                         tiles[x, y].tile = newTile;
                         tiles[x, y].walkable = tileData[currentPixel].walkable;
+                        tiles[x, y].usesBitmask = tileData[currentPixel].usesBitmask;
 
                         path.AddTile(tileData[currentPixel].walkable, x, y);
-                        if (tileData[currentPixel].walkable) {
-                            blocker.AddFreeTile(new Vector3(x, y, 0));
-                        }
                     } else {
                         tiles[x, y].tile = null;
                         tiles[x, y].walkable = true;
+                        tiles[x, y].usesBitmask = false;
 
                         path.AddTile(true, x, y);
-                        blocker.AddFreeTile(new Vector3(x, y, 0));
                     }
 
                     /*if (tileData [currentPixel].enemy)
                     {
                         newTile.GetComponent<EnemySpawn> ().enemyName = tileData [currentPixel].prefabName;
                     }*/
+                }
+
+                if (tiles[x, y].walkable) {
+                    blocker.AddFreeTile(new Vector3(x, y, 0));
                 }
             }
         }
@@ -219,21 +218,25 @@ public class MapLoader : MonoBehaviour {
     void UpdateBitmaskTiles() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
-                if (tiles[x, y].tile != null) {
-                    if (tileData[tiles[x, y].color].usesBitmask) {
-                        int bitmaskValue = GetBitmaskValue(x, y);
-                        int spriteIndex = bitmaskValueToIndex[bitmaskValue];
+                UpdateTileBitmask(x, y);
+            }
+        }
+    }
 
-                        //print ("Value for (" + x + ", " + y + ") is " + bitmaskValue);
+    void UpdateTileBitmask(int x, int y) {
+        if (tiles[x, y].tile != null) {
+            if (tiles[x, y].usesBitmask) {
+                int bitmaskValue = GetBitmaskValue(x, y);
+                int spriteIndex = bitmaskValueToIndex[bitmaskValue];
 
-                        BitmaskSprite bitmaskSprite = tileData[tiles[x, y].color].bitmaskSprites[spriteIndex];
+                //print ("Value for (" + x + ", " + y + ") is " + bitmaskValue);
 
-                        tiles[x, y].tile.GetComponentInChildren<SpriteRenderer>().sprite = bitmaskSprite.sprite;
-                        tiles[x, y].tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, bitmaskSprite.angle));
+                BitmaskSprite bitmaskSprite = bitmaskSprites[spriteIndex];
 
-                        //TODO: calculate the collider accordingly
-                    }
-                }
+                tiles[x, y].tile.GetComponentInChildren<SpriteRenderer>().sprite = bitmaskSprite.sprite;
+                tiles[x, y].tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, bitmaskSprite.angle));
+
+                //TODO: calculate the collider accordingly
             }
         }
     }
@@ -286,9 +289,28 @@ public class MapLoader : MonoBehaviour {
     bool isValidNeighbor(GameTile currentTile, TilePos newTilePos) {
         if ((newTilePos.x >= 0) && (newTilePos.x <= (width - 1)) && (newTilePos.y >= 0) && (newTilePos.y <= (height - 1))) {
             GameTile neighborTile = tiles[newTilePos.x, newTilePos.y];
-            return (currentTile.color.Equals(neighborTile.color));
+            return currentTile.walkable == neighborTile.walkable;;
         } else {
             return true;
+        }
+    }
+
+    public void AddObstacle(GameObject obstacle, int x, int y) {
+        tiles[x, y].tile = obstacle;
+        tiles[x, y].walkable = false;
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if ((dx == 0) && (dy == 0))
+                    continue;
+
+                int checkX = x + dx;
+                int checkY = y + dy;
+
+                if ((checkX >= 0) && (checkX < width) && (checkY >= 0) && (checkY < height)) {
+                    UpdateTileBitmask(checkX, checkY);
+                }
+            }
         }
     }
 
@@ -325,7 +347,7 @@ public class MapLoader : MonoBehaviour {
     BitmaskSprite[] LoadBitmaskSprites(string prefabName) {
         BitmaskSprite[] bitmaskSprites = new BitmaskSprite[48];
 
-        Sprite baseSprite = Resources.Load<Sprite>(prefabName + "/BaseSprite");
+        Sprite baseSprite = null;//Resources.Load<Sprite>(prefabName + "/BaseSprite");
         Sprite sideSprite = Resources.Load<Sprite>(prefabName + "/SideSprite");
         Sprite innerCornerSprite = Resources.Load<Sprite>(prefabName + "/InnerCornerSprite");
         Sprite outerCornerSprite = Resources.Load<Sprite>(prefabName + "/OuterCornerSprite");
