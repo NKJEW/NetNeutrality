@@ -298,6 +298,7 @@ public class MapLoader : MonoBehaviour {
     public void AddObstacle(GameObject obstacle, int x, int y) {
         tiles[x, y].tile = obstacle;
         tiles[x, y].walkable = false;
+        tiles[x, y].usesBitmask = true;
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -312,6 +313,9 @@ public class MapLoader : MonoBehaviour {
                 }
             }
         }
+
+        UpdateTileBitmask(x, y);
+        tiles[x, y].tile.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
     /*void CreateBackground ()
