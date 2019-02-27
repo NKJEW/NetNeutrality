@@ -227,15 +227,16 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapTexture: {fileID: 2800000, guid: 85051897e459a4c55a9160cda1fb902d, type: 3}
   publicTileData:
-  - color:
-      serializedVersion: 2
-      rgba: 4278190080
-    prefabName: Border
-    terrain: 1
-    enemy: 0
-    walkable: 0
+  - walkable: 1
+    usesBitmask: 0
+    tileColor: {r: 0, g: 0, b: 0, a: 0}
+  - walkable: 0
     usesBitmask: 1
-    prefab: {fileID: 0}
+    tileColor: {r: 1, g: 1, b: 1, a: 1}
+  - walkable: 0
+    usesBitmask: 1
+    tileColor: {r: 1, g: 0, b: 0, a: 1}
+  tilePrefab: {fileID: 1774199265240976, guid: ceff57cd2e0714c13998d9b037ab643b, type: 2}
 --- !u!4 &501537457
 Transform:
   m_ObjectHideFlags: 0
@@ -368,7 +369,6 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   blockPlaceRate: 1
-  block: {fileID: 1774199265240976, guid: 16e3f291937534b3db760e1cd31894d9, type: 2}
 --- !u!4 &1273312707
 Transform:
   m_ObjectHideFlags: 0

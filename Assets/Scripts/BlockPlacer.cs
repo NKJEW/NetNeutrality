@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class BlockPlacer : MonoBehaviour {
     public float blockPlaceRate;
-    public GameObject block;
 
     List<Vector3> freeTiles = new List<Vector3>();
     PlayerController player;
@@ -43,10 +42,8 @@ public class BlockPlacer : MonoBehaviour {
     void PlaceBlock() {
         Vector3 pos = GetRandomPos();
 
-        GameObject newObstacle = Instantiate(block, pos, Quaternion.identity);
         freeTiles.Remove(pos);
         TilePos tilePos = PathfindingMap.WorldToTilePos(pos);
-        PathfindingMap.UpdateTile(false, tilePos.x, tilePos.y);
-        map.AddObstacle(newObstacle, tilePos.x, tilePos.y);
+        map.AddObstacle(tilePos.x, tilePos.y);
     }
 }

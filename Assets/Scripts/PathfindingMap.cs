@@ -68,8 +68,8 @@ public class Node : IHeapItem<Node> {
 public class PathfindingMap : MonoBehaviour {
     public static Node[,] pathfindingGrid;
 
-    private static int xSize;
-    private static int ySize;
+    static int xSize;
+    static int ySize;
 
     public void InitializeGrid(int x, int y) {
         pathfindingGrid = new Node[x, y];
@@ -85,10 +85,6 @@ public class PathfindingMap : MonoBehaviour {
         newNode.gridPosition = new TilePos(x, y);
 
         pathfindingGrid[x, y] = newNode;
-    }
-
-    public static void UpdateTile(bool walkable, int x, int y) {
-        pathfindingGrid[x, y].walkable = walkable;
     }
 
     public void AddNeighbors() {

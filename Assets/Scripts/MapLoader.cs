@@ -4,22 +4,14 @@ using UnityEngine;
 
 [System.Serializable]
 public class MapTileData {
-    public Color32 color;
-    public string prefabName;
-
-    public bool terrain;
-    public bool enemy;
     public bool walkable;
     public bool usesBitmask;
-
-    [HideInInspector]
-    public GameObject prefab;
+    public Color tileColor;
 }
 
 public class GameTile {
     public GameObject tile;
-    public bool usesBitmask;
-    public bool walkable;
+    public int blockTypeId;
 }
 
 public class BitmaskSprite {
@@ -36,7 +28,7 @@ public class MapLoader : MonoBehaviour {
     public Texture2D mapTexture;
 
     public MapTileData[] publicTileData;
-    Dictionary<Color32, MapTileData> tileData = new Dictionary<Color32, MapTileData>();
+    public GameObject tilePrefab;
     BitmaskSprite[] bitmaskSprites;
 
     GameTile[,] tiles;
@@ -123,27 +115,7 @@ public class MapLoader : MonoBehaviour {
 
         bitmaskSprites = LoadBitmaskSprites("Border");
 
-        LoadTilesIntoDictionary();
         LoadMap();
-    }
-
-    void LoadTilesIntoDictionary() {
-        foreach (MapTileData mapTile in publicTileData) {
-            //if (!mapTile.enemy)
-            //{
-                mapTile.prefab = Resources.Load (mapTile.prefabName) as GameObject;
-            //}
-            //else
-            //{
-            //    if (enemySpawner == null)
-            //    {
-            //        enemySpawner = Resources.Load ("EnemySpawner") as GameObject;
-            //    }
-            //    mapTile.prefab = enemySpawner;
-            //}
-
-            tileData.Add(mapTile.color, mapTile);
-        }
     }
 
     void EmptyMap() {
@@ -176,31 +148,9 @@ public class MapLoader : MonoBehaviour {
                 Color32 currentPixel = pixels[(y * width) + x];
                 tiles[x, y] = new GameTile();
                 if (currentPixel.a == 0) {
-                    tiles[x, y].tile = null;
-                    tiles[x, y].walkable = true;
-                    tiles[x, y].usesBitmask = false;
+                    LoadTile(x, y, 0);
                 } else {
-                    GameObject newTile = CreateVisibleTileAtPosition(currentPixel, x, y);
-
-                    if (tileData[currentPixel].terrain) {
-                        tiles[x, y].tile = newTile;
-                        tiles[x, y].walkable = tileData[currentPixel].walkable;
-                        tiles[x, y].usesBitmask = tileData[currentPixel].usesBitmask;
-                    } else {
-                        tiles[x, y].tile = null;
-                        tiles[x, y].walkable = true;
-                        tiles[x, y].usesBitmask = false;
-                    }
-
-                    /*if (tileData [currentPixel].enemy)
-                    {
-                        newTile.GetComponent<EnemySpawn> ().enemyName = tileData [currentPixel].prefabName;
-                    }*/
-                }
-
-                path.AddTile(tiles[x, y].walkable, x, y);
-                if (tiles[x, y].walkable) {
-                    blocker.AddFreeTile(new Vector3(x, y, 0));
+                    LoadTile(x, y, 1);
                 }
             }
         }
@@ -208,6 +158,39 @@ public class MapLoader : MonoBehaviour {
         path.AddNeighbors();
 
         UpdateBitmaskTiles();
+    }
+
+    void LoadTile(int x, int y, int id) {
+        if (id > 0) {
+            if (tiles[x, y].tile == null) {
+                tiles[x, y].tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
+            }
+
+            tiles[x, y].tile.GetComponent<SpriteRenderer>().color = publicTileData[id].tileColor;
+
+        } else {
+            if (tiles[x, y].tile != null) {
+                Destroy(tiles[x, y].tile);
+            }
+
+            tiles[x, y].tile = null;
+        }
+
+        tiles[x, y].blockTypeId = id;
+
+        bool isWalkable = GetTileData(x, y).walkable;
+        path.AddTile(isWalkable, x, y);
+        if (isWalkable) {
+            blocker.AddFreeTile(new Vector3(x, y, 0));
+        }
+    }
+
+    MapTileData GetTileData(int x, int y) {
+        return publicTileData[tiles[x, y].blockTypeId];
+    }
+
+    MapTileData GetTileData(GameTile tile) {
+        return publicTileData[tile.blockTypeId];
     }
 
     void UpdateBitmaskTiles() {
@@ -220,7 +203,7 @@ public class MapLoader : MonoBehaviour {
 
     void UpdateTileBitmask(int x, int y) {
         if (tiles[x, y].tile != null) {
-            if (tiles[x, y].usesBitmask) {
+            if (GetTileData(x, y).usesBitmask) {
                 int bitmaskValue = GetBitmaskValue(x, y);
                 int spriteIndex = bitmaskValueToIndex[bitmaskValue];
 
@@ -284,16 +267,14 @@ public class MapLoader : MonoBehaviour {
     bool isValidNeighbor(GameTile currentTile, TilePos newTilePos) {
         if ((newTilePos.x >= 0) && (newTilePos.x <= (width - 1)) && (newTilePos.y >= 0) && (newTilePos.y <= (height - 1))) {
             GameTile neighborTile = tiles[newTilePos.x, newTilePos.y];
-            return currentTile.walkable == neighborTile.walkable;;
+            return GetTileData(currentTile).walkable == GetTileData(neighborTile).walkable;;
         } else {
             return true;
         }
     }
 
-    public void AddObstacle(GameObject obstacle, int x, int y) {
-        tiles[x, y].tile = obstacle;
-        tiles[x, y].walkable = false;
-        tiles[x, y].usesBitmask = true;
+    public void AddObstacle(int x, int y) {
+        LoadTile(x, y, 2);
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -310,7 +291,6 @@ public class MapLoader : MonoBehaviour {
         }
 
         UpdateTileBitmask(x, y);
-        tiles[x, y].tile.GetComponent<SpriteRenderer>().color = Color.red;
     }
 
     /*void CreateBackground ()
@@ -326,22 +306,6 @@ public class MapLoader : MonoBehaviour {
         rend.material = backgroundMat;
         rend.material.mainTextureScale = new Vector2 (width, height);
     }*/
-
-    GameObject CreateVisibleTileAtPosition(Color32 color, int x, int y) {
-        GameObject tile = null;
-
-        if (tileData.ContainsKey(color)) {
-            tile = tileData[color].prefab;
-        } else {
-            Debug.LogError("No prefab exists for tile at (" + x + ", " + y + ") with color" + color);
-        }
-
-        if (tile != null) {
-            return (GameObject)Instantiate(tile, new Vector3(x, y, 0), Quaternion.identity, transform);
-        } else {
-            return null;
-        }
-    }
 
     BitmaskSprite[] LoadBitmaskSprites(string prefabName) {
         BitmaskSprite[] bitmaskSprites = new BitmaskSprite[48];
