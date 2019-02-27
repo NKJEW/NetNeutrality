@@ -179,8 +179,6 @@ public class MapLoader : MonoBehaviour {
                     tiles[x, y].tile = null;
                     tiles[x, y].walkable = true;
                     tiles[x, y].usesBitmask = false;
-
-                    path.AddTile(true, x, y);
                 } else {
                     GameObject newTile = CreateVisibleTileAtPosition(currentPixel, x, y);
 
@@ -188,14 +186,10 @@ public class MapLoader : MonoBehaviour {
                         tiles[x, y].tile = newTile;
                         tiles[x, y].walkable = tileData[currentPixel].walkable;
                         tiles[x, y].usesBitmask = tileData[currentPixel].usesBitmask;
-
-                        path.AddTile(tileData[currentPixel].walkable, x, y);
                     } else {
                         tiles[x, y].tile = null;
                         tiles[x, y].walkable = true;
                         tiles[x, y].usesBitmask = false;
-
-                        path.AddTile(true, x, y);
                     }
 
                     /*if (tileData [currentPixel].enemy)
@@ -204,6 +198,7 @@ public class MapLoader : MonoBehaviour {
                     }*/
                 }
 
+                path.AddTile(tiles[x, y].walkable, x, y);
                 if (tiles[x, y].walkable) {
                     blocker.AddFreeTile(new Vector3(x, y, 0));
                 }
@@ -351,61 +346,63 @@ public class MapLoader : MonoBehaviour {
     BitmaskSprite[] LoadBitmaskSprites(string prefabName) {
         BitmaskSprite[] bitmaskSprites = new BitmaskSprite[48];
 
-        Sprite baseSprite = null;//Resources.Load<Sprite>(prefabName + "/BaseSprite");
+        //Sprite baseSprite = null;//Resources.Load<Sprite>(prefabName + "/BaseSprite");
         Sprite sideSprite = Resources.Load<Sprite>(prefabName + "/SideSprite");
         Sprite innerCornerSprite = Resources.Load<Sprite>(prefabName + "/InnerCornerSprite");
-        Sprite outerCornerSprite = Resources.Load<Sprite>(prefabName + "/OuterCornerSprite");
+        Sprite outerCornerSprite = Resources.Load<Sprite>(prefabName + "/InnerCornerSprite");
         Sprite tSplitSprite = Resources.Load<Sprite>(prefabName + "/TSplitSprite");
         Sprite endSprite = Resources.Load<Sprite>(prefabName + "/EndSprite");
+        Sprite boxSprite = Resources.Load<Sprite>(prefabName + "/BaseSprite");
+        Sprite xSprite = Resources.Load<Sprite>(prefabName + "/IntersectionSprite");
 
-        bitmaskSprites[0] = new BitmaskSprite(baseSprite, 0);
+        bitmaskSprites[0] = new BitmaskSprite(null, 0);
         bitmaskSprites[1] = new BitmaskSprite(endSprite, 180);
         bitmaskSprites[2] = new BitmaskSprite(endSprite, 270);
-        bitmaskSprites[3] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[4] = new BitmaskSprite(outerCornerSprite, 270);
+        bitmaskSprites[3] = new BitmaskSprite(innerCornerSprite, 90);
+        bitmaskSprites[4] = new BitmaskSprite(outerCornerSprite, 90);
         bitmaskSprites[5] = new BitmaskSprite(endSprite, 90);
-        bitmaskSprites[6] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[7] = new BitmaskSprite(outerCornerSprite, 180);
-        bitmaskSprites[8] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[9] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[10] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[11] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[6] = new BitmaskSprite(innerCornerSprite, 0);
+        bitmaskSprites[7] = new BitmaskSprite(outerCornerSprite, 0);
+        bitmaskSprites[8] = new BitmaskSprite(sideSprite, 0);
+        bitmaskSprites[9] = new BitmaskSprite(tSplitSprite, 0);
+        bitmaskSprites[10] = new BitmaskSprite(tSplitSprite, 0);
+        bitmaskSprites[11] = new BitmaskSprite(tSplitSprite, 0);
         bitmaskSprites[12] = new BitmaskSprite(sideSprite, 180);
         bitmaskSprites[13] = new BitmaskSprite(endSprite, 0);
-        bitmaskSprites[14] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[15] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[16] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[17] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[18] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[19] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[20] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[21] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[22] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[23] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[24] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[14] = new BitmaskSprite(sideSprite, 90);
+        bitmaskSprites[15] = new BitmaskSprite(innerCornerSprite, 180);
+        bitmaskSprites[16] = new BitmaskSprite(tSplitSprite, 90);
+        bitmaskSprites[17] = new BitmaskSprite(tSplitSprite, 90);
+        bitmaskSprites[18] = new BitmaskSprite(innerCornerSprite, 270);
+        bitmaskSprites[19] = new BitmaskSprite(tSplitSprite, 270);
+        bitmaskSprites[20] = new BitmaskSprite(tSplitSprite, 270);
+        bitmaskSprites[21] = new BitmaskSprite(tSplitSprite, 180);
+        bitmaskSprites[22] = new BitmaskSprite(xSprite, 0);
+        bitmaskSprites[23] = new BitmaskSprite(xSprite, 0);
+        bitmaskSprites[24] = new BitmaskSprite(xSprite, 0);
         bitmaskSprites[25] = new BitmaskSprite(tSplitSprite, 180);
-        bitmaskSprites[26] = new BitmaskSprite(outerCornerSprite, 0);
-        bitmaskSprites[27] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[26] = new BitmaskSprite(outerCornerSprite, 180);
+        bitmaskSprites[27] = new BitmaskSprite(tSplitSprite, 90);
         bitmaskSprites[28] = new BitmaskSprite(sideSprite, 270);
-        bitmaskSprites[29] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[30] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[29] = new BitmaskSprite(tSplitSprite, 180);
+        bitmaskSprites[30] = new BitmaskSprite(xSprite, 0);
         bitmaskSprites[31] = new BitmaskSprite(tSplitSprite, 270);
-        bitmaskSprites[32] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[32] = new BitmaskSprite(xSprite, 0);
         bitmaskSprites[33] = new BitmaskSprite(innerCornerSprite, 270);
-        bitmaskSprites[34] = new BitmaskSprite(outerCornerSprite, 90);
-        bitmaskSprites[35] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[34] = new BitmaskSprite(outerCornerSprite, 270);
+        bitmaskSprites[35] = new BitmaskSprite(tSplitSprite, 270);
         bitmaskSprites[36] = new BitmaskSprite(sideSprite, 90);
-        bitmaskSprites[37] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[38] = new BitmaskSprite(null, 0);//TODO
-        bitmaskSprites[39] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[37] = new BitmaskSprite(tSplitSprite, 180);
+        bitmaskSprites[38] = new BitmaskSprite(xSprite, 0);
+        bitmaskSprites[39] = new BitmaskSprite(xSprite, 0);
         bitmaskSprites[40] = new BitmaskSprite(tSplitSprite, 90);
         bitmaskSprites[41] = new BitmaskSprite(innerCornerSprite, 180);
         bitmaskSprites[42] = new BitmaskSprite(sideSprite, 0);
         bitmaskSprites[43] = new BitmaskSprite(tSplitSprite, 0);
         bitmaskSprites[44] = new BitmaskSprite(innerCornerSprite, 0);
         bitmaskSprites[45] = new BitmaskSprite(innerCornerSprite, 90);
-        bitmaskSprites[46] = new BitmaskSprite(baseSprite, 0);
-        bitmaskSprites[47] = new BitmaskSprite(null, 0);//TODO
+        bitmaskSprites[46] = new BitmaskSprite(null, 0);
+        bitmaskSprites[47] = new BitmaskSprite(boxSprite, 0);
 
         return bitmaskSprites;
     }

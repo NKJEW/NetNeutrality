@@ -338,7 +338,7 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
-  m_RootOrder: 3
+  m_RootOrder: 4
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1273312705
 GameObject:
@@ -367,7 +367,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 4c2496781704f460a80644a4d1794c04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockPlaceRate: 2
+  blockPlaceRate: 1
   block: {fileID: 1774199265240976, guid: 16e3f291937534b3db760e1cd31894d9, type: 2}
 --- !u!4 &1273312707
 Transform:
