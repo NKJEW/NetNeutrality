@@ -26,13 +26,13 @@ public class PlayerController : MonoBehaviour {
 	
 	void Update () {
         // test for inputs
-        if (Input.GetKeyDown(KeyCode.W)) {
+        if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
             AttemptMove(Vector2Int.up);
-        } else if (Input.GetKeyDown(KeyCode.S)) {
+        } else if (Input.GetKeyDown(KeyCode.S) || Input.GetKeyDown(KeyCode.DownArrow)) {
             AttemptMove(Vector2Int.down);
-        } else if (Input.GetKeyDown(KeyCode.D)) {
+        } else if (Input.GetKeyDown(KeyCode.D) || Input.GetKeyDown(KeyCode.RightArrow)) {
             AttemptMove(Vector2Int.right);
-        } else if (Input.GetKeyDown(KeyCode.A)) {
+        } else if (Input.GetKeyDown(KeyCode.A) || Input.GetKeyDown(KeyCode.LeftArrow)) {
             AttemptMove(Vector2Int.left);
         } 
 
