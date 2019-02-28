@@ -185,13 +185,22 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   mapTexture: {fileID: 2800000, guid: 85051897e459a4c55a9160cda1fb902d, type: 3}
   publicTileData:
-  - walkable: 1
+  - fileColor:
+      serializedVersion: 2
+      rgba: 0
+    walkable: 1
     usesBitmask: 0
     tileColor: {r: 0, g: 0, b: 0, a: 0}
-  - walkable: 0
+  - fileColor:
+      serializedVersion: 2
+      rgba: 4278190080
+    walkable: 0
     usesBitmask: 1
     tileColor: {r: 0.6, g: 0.19215688, b: 0.78823537, a: 1}
-  - walkable: 0
+  - fileColor:
+      serializedVersion: 2
+      rgba: 4278190335
+    walkable: 0
     usesBitmask: 1
     tileColor: {r: 0.76470596, g: 0.20000002, b: 0.5372549, a: 1}
   tilePrefab: {fileID: 1774199265240976, guid: ceff57cd2e0714c13998d9b037ab643b, type: 2}
@@ -309,7 +318,7 @@ GameObject:
   - component: {fileID: 1273312707}
   - component: {fileID: 1273312706}
   m_Layer: 0
-  m_Name: BlockPlacer
+  m_Name: SpawnManager
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -323,10 +332,9 @@ MonoBehaviour:
   m_GameObject: {fileID: 1273312705}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4c2496781704f460a80644a4d1794c04, type: 3}
+  m_Script: {fileID: 11500000, guid: f668c8b93d13e47dbb12ea17bbc87ccf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  blockPlaceRate: 1
 --- !u!4 &1273312707
 Transform:
   m_ObjectHideFlags: 0
@@ -339,6 +347,48 @@ Transform:
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!1 &1591772781
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1591772783}
+  - component: {fileID: 1591772782}
+  m_Layer: 0
+  m_Name: BlockPlacer
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &1591772782
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1591772781}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: fe10d77520aac42b1bb33bb57956a006, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  spawnRate: 2
+  id: 2
+--- !u!4 &1591772783
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInternal: {fileID: 0}
+  m_GameObject: {fileID: 1591772781}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_RootOrder: 5
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1787412930
 GameObject:

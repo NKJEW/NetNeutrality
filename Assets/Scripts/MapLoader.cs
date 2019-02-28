@@ -4,6 +4,7 @@ using UnityEngine;
 
 [System.Serializable]
 public class MapTileData {
+    public Color32 fileColor;
     public bool walkable;
     public bool usesBitmask;
     public Color tileColor;
@@ -30,6 +31,8 @@ public class MapLoader : MonoBehaviour {
     public MapTileData[] publicTileData;
     public GameObject tilePrefab;
     BitmaskSprite[] bitmaskSprites;
+
+    Dictionary<Color32, int> colorIds = new Dictionary<Color32, int>();
 
     GameTile[,] tiles;
 
@@ -103,7 +106,7 @@ public class MapLoader : MonoBehaviour {
     };
 
     PathfindingMap path;
-    BlockPlacer blocker;
+    SpawnManager blocker;
 
     void Awake() {
         //load resources
@@ -111,11 +114,19 @@ public class MapLoader : MonoBehaviour {
         //backgroundMat = Resources.Load (backgroundMatName) as Material;
 
         path = FindObjectOfType<PathfindingMap>();
-        blocker = FindObjectOfType<BlockPlacer>();
+        blocker = FindObjectOfType<SpawnManager>();
+        blocker.Init(this);
 
         bitmaskSprites = LoadBitmaskSprites("Border");
 
+        LoadColorDictionary();
         LoadMap();
+    }
+
+    void LoadColorDictionary() {
+        for (int i = 0; i < publicTileData.Length; i++) {
+            colorIds.Add(publicTileData[i].fileColor, i);
+        }
     }
 
     void EmptyMap() {
@@ -146,16 +157,22 @@ public class MapLoader : MonoBehaviour {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {
                 Color32 currentPixel = pixels[(y * width) + x];
+                Color32 fullColorPixel = GetFullColor(currentPixel);
+
                 tiles[x, y] = new GameTile();
-                if (currentPixel.a == 0) {
-                    LoadTile(x, y, 0);
-                } else {
+                if (fullColorPixel.Equals(publicTileData[1].fileColor) && currentPixel.a > 0) {
                     LoadTile(x, y, 1);
+                } else {
+                    LoadTile(x, y, 0);
+                    if (currentPixel.a > 0 && colorIds.ContainsKey(fullColorPixel)) {
+                        blocker.AddFreeTile(colorIds[fullColorPixel], new Vector3(x, y, 0), 255);
+                    }
                 }
             }
         }
 
         path.AddNeighbors();
+        blocker.SortSpawnLists();
 
         UpdateBitmaskTiles();
     }
@@ -180,9 +197,10 @@ public class MapLoader : MonoBehaviour {
 
         bool isWalkable = GetTileData(x, y).walkable;
         path.AddTile(isWalkable, x, y);
-        if (isWalkable) {
-            blocker.AddFreeTile(new Vector3(x, y, 0));
-        }
+    }
+
+    Color32 GetFullColor(Color32 original) {
+        return new Color32(original.r, original.g, original.b, 255);
     }
 
     MapTileData GetTileData(int x, int y) {
@@ -273,8 +291,8 @@ public class MapLoader : MonoBehaviour {
         }
     }
 
-    public void AddObstacle(int x, int y) {
-        LoadTile(x, y, 2);
+    public void AddObstacle(int x, int y, int id) {
+        LoadTile(x, y, id);
 
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
@@ -308,7 +326,7 @@ public class MapLoader : MonoBehaviour {
     }*/
 
     BitmaskSprite[] LoadBitmaskSprites(string prefabName) {
-        BitmaskSprite[] bitmaskSprites = new BitmaskSprite[48];
+        BitmaskSprite[] newSprites = new BitmaskSprite[48];
 
         //Sprite baseSprite = null;//Resources.Load<Sprite>(prefabName + "/BaseSprite");
         Sprite sideSprite = Resources.Load<Sprite>(prefabName + "/SideSprite");
@@ -319,55 +337,55 @@ public class MapLoader : MonoBehaviour {
         Sprite boxSprite = Resources.Load<Sprite>(prefabName + "/BaseSprite");
         Sprite xSprite = Resources.Load<Sprite>(prefabName + "/IntersectionSprite");
 
-        bitmaskSprites[0] = new BitmaskSprite(null, 0);
-        bitmaskSprites[1] = new BitmaskSprite(endSprite, 180);
-        bitmaskSprites[2] = new BitmaskSprite(endSprite, 270);
-        bitmaskSprites[3] = new BitmaskSprite(innerCornerSprite, 90);
-        bitmaskSprites[4] = new BitmaskSprite(outerCornerSprite, 90);
-        bitmaskSprites[5] = new BitmaskSprite(endSprite, 90);
-        bitmaskSprites[6] = new BitmaskSprite(innerCornerSprite, 0);
-        bitmaskSprites[7] = new BitmaskSprite(outerCornerSprite, 0);
-        bitmaskSprites[8] = new BitmaskSprite(sideSprite, 0);
-        bitmaskSprites[9] = new BitmaskSprite(tSplitSprite, 0);
-        bitmaskSprites[10] = new BitmaskSprite(tSplitSprite, 0);
-        bitmaskSprites[11] = new BitmaskSprite(tSplitSprite, 0);
-        bitmaskSprites[12] = new BitmaskSprite(sideSprite, 180);
-        bitmaskSprites[13] = new BitmaskSprite(endSprite, 0);
-        bitmaskSprites[14] = new BitmaskSprite(sideSprite, 90);
-        bitmaskSprites[15] = new BitmaskSprite(innerCornerSprite, 180);
-        bitmaskSprites[16] = new BitmaskSprite(tSplitSprite, 90);
-        bitmaskSprites[17] = new BitmaskSprite(tSplitSprite, 90);
-        bitmaskSprites[18] = new BitmaskSprite(innerCornerSprite, 270);
-        bitmaskSprites[19] = new BitmaskSprite(tSplitSprite, 270);
-        bitmaskSprites[20] = new BitmaskSprite(tSplitSprite, 270);
-        bitmaskSprites[21] = new BitmaskSprite(tSplitSprite, 180);
-        bitmaskSprites[22] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[23] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[24] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[25] = new BitmaskSprite(tSplitSprite, 180);
-        bitmaskSprites[26] = new BitmaskSprite(outerCornerSprite, 180);
-        bitmaskSprites[27] = new BitmaskSprite(tSplitSprite, 90);
-        bitmaskSprites[28] = new BitmaskSprite(sideSprite, 270);
-        bitmaskSprites[29] = new BitmaskSprite(tSplitSprite, 180);
-        bitmaskSprites[30] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[31] = new BitmaskSprite(tSplitSprite, 270);
-        bitmaskSprites[32] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[33] = new BitmaskSprite(innerCornerSprite, 270);
-        bitmaskSprites[34] = new BitmaskSprite(outerCornerSprite, 270);
-        bitmaskSprites[35] = new BitmaskSprite(tSplitSprite, 270);
-        bitmaskSprites[36] = new BitmaskSprite(sideSprite, 90);
-        bitmaskSprites[37] = new BitmaskSprite(tSplitSprite, 180);
-        bitmaskSprites[38] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[39] = new BitmaskSprite(xSprite, 0);
-        bitmaskSprites[40] = new BitmaskSprite(tSplitSprite, 90);
-        bitmaskSprites[41] = new BitmaskSprite(innerCornerSprite, 180);
-        bitmaskSprites[42] = new BitmaskSprite(sideSprite, 0);
-        bitmaskSprites[43] = new BitmaskSprite(tSplitSprite, 0);
-        bitmaskSprites[44] = new BitmaskSprite(innerCornerSprite, 0);
-        bitmaskSprites[45] = new BitmaskSprite(innerCornerSprite, 90);
-        bitmaskSprites[46] = new BitmaskSprite(null, 0);
-        bitmaskSprites[47] = new BitmaskSprite(boxSprite, 0);
+        newSprites[0] = new BitmaskSprite(null, 0);
+        newSprites[1] = new BitmaskSprite(endSprite, 180);
+        newSprites[2] = new BitmaskSprite(endSprite, 270);
+        newSprites[3] = new BitmaskSprite(innerCornerSprite, 90);
+        newSprites[4] = new BitmaskSprite(outerCornerSprite, 90);
+        newSprites[5] = new BitmaskSprite(endSprite, 90);
+        newSprites[6] = new BitmaskSprite(innerCornerSprite, 0);
+        newSprites[7] = new BitmaskSprite(outerCornerSprite, 0);
+        newSprites[8] = new BitmaskSprite(sideSprite, 0);
+        newSprites[9] = new BitmaskSprite(tSplitSprite, 0);
+        newSprites[10] = new BitmaskSprite(tSplitSprite, 0);
+        newSprites[11] = new BitmaskSprite(tSplitSprite, 0);
+        newSprites[12] = new BitmaskSprite(sideSprite, 180);
+        newSprites[13] = new BitmaskSprite(endSprite, 0);
+        newSprites[14] = new BitmaskSprite(sideSprite, 90);
+        newSprites[15] = new BitmaskSprite(innerCornerSprite, 180);
+        newSprites[16] = new BitmaskSprite(tSplitSprite, 90);
+        newSprites[17] = new BitmaskSprite(tSplitSprite, 90);
+        newSprites[18] = new BitmaskSprite(innerCornerSprite, 270);
+        newSprites[19] = new BitmaskSprite(tSplitSprite, 270);
+        newSprites[20] = new BitmaskSprite(tSplitSprite, 270);
+        newSprites[21] = new BitmaskSprite(tSplitSprite, 180);
+        newSprites[22] = new BitmaskSprite(xSprite, 0);
+        newSprites[23] = new BitmaskSprite(xSprite, 0);
+        newSprites[24] = new BitmaskSprite(xSprite, 0);
+        newSprites[25] = new BitmaskSprite(tSplitSprite, 180);
+        newSprites[26] = new BitmaskSprite(outerCornerSprite, 180);
+        newSprites[27] = new BitmaskSprite(tSplitSprite, 90);
+        newSprites[28] = new BitmaskSprite(sideSprite, 270);
+        newSprites[29] = new BitmaskSprite(tSplitSprite, 180);
+        newSprites[30] = new BitmaskSprite(xSprite, 0);
+        newSprites[31] = new BitmaskSprite(tSplitSprite, 270);
+        newSprites[32] = new BitmaskSprite(xSprite, 0);
+        newSprites[33] = new BitmaskSprite(innerCornerSprite, 270);
+        newSprites[34] = new BitmaskSprite(outerCornerSprite, 270);
+        newSprites[35] = new BitmaskSprite(tSplitSprite, 270);
+        newSprites[36] = new BitmaskSprite(sideSprite, 90);
+        newSprites[37] = new BitmaskSprite(tSplitSprite, 180);
+        newSprites[38] = new BitmaskSprite(xSprite, 0);
+        newSprites[39] = new BitmaskSprite(xSprite, 0);
+        newSprites[40] = new BitmaskSprite(tSplitSprite, 90);
+        newSprites[41] = new BitmaskSprite(innerCornerSprite, 180);
+        newSprites[42] = new BitmaskSprite(sideSprite, 0);
+        newSprites[43] = new BitmaskSprite(tSplitSprite, 0);
+        newSprites[44] = new BitmaskSprite(innerCornerSprite, 0);
+        newSprites[45] = new BitmaskSprite(innerCornerSprite, 90);
+        newSprites[46] = new BitmaskSprite(null, 0);
+        newSprites[47] = new BitmaskSprite(boxSprite, 0);
 
-        return bitmaskSprites;
+        return newSprites;
     }
 }
