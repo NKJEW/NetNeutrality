@@ -5,13 +5,21 @@ using UnityEngine;
 public class PlayerController : MonoBehaviour {
     public float speed;
 
+    // rotation
+    public float turnSpeed;
+    Quaternion targetRotation;
+    Transform sprite;
+
+    // position
     Vector2Int lastTile = Vector2Int.zero;
     float distFromTile = 0f;
 
+    // inputs
     Vector2Int curMovement = Vector2Int.zero;
     Vector2Int quedMovement = Vector2Int.zero;
 
 	void Start () {
+        sprite = transform.Find("Sprite");
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         ExecuteMove(false);
 	}
@@ -41,6 +49,9 @@ public class PlayerController : MonoBehaviour {
             transform.position = transform.position + (new Vector3(curMovement.x, curMovement.y, 0f) * speed * Time.deltaTime);
         }
 
+        // apply rotation
+        ApplyRotation();
+
 	}
 
     void ExecuteMove (bool backedUp = false) { // uses qued movement
@@ -53,6 +64,8 @@ public class PlayerController : MonoBehaviour {
             curMovement = quedMovement;
             quedMovement = Vector2Int.zero;
         }
+
+        UpdateTargetRotation(curMovement);
 
         // stop player if moving onto invalid tile
         if (!MoveValid(curMovement)) {
@@ -79,5 +92,23 @@ public class PlayerController : MonoBehaviour {
         } else {
             return false;
         }
+    }
+
+    void UpdateTargetRotation (Vector2Int move) {
+        if (move == Vector2Int.up) {
+            targetRotation = Quaternion.Euler(0f, 0f, 90f);
+        } else if (move == Vector2Int.right) {
+            targetRotation = Quaternion.identity;
+        } else if (move == Vector2Int.down) {
+            targetRotation = Quaternion.Euler(0f, 0f, 270f);
+        } else if (move == Vector2Int.left) {
+            targetRotation = Quaternion.Euler(0f, 0f, 180f);
+        }
+    }
+
+    void ApplyRotation ()
+    {
+        //float diff = Quaternion.Angle(targetRotation, sprite.rotation);
+        sprite.rotation = Quaternion.RotateTowards(sprite.rotation, targetRotation, turnSpeed * Time.deltaTime);
     }
 }
