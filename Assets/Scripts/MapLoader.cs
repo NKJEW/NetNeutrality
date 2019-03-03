@@ -8,18 +8,31 @@ public class MapTileData {
     public bool walkable;
     public bool usesBitmask;
     public Color tileColor;
+    public Sprite iconSprite;
 }
 
 public class GameTile {
     public GameObject tile;
     public int blockTypeId;
+
+    public SpriteRenderer GetMainSprite() {
+        return tile.transform.Find("Main").GetComponent<SpriteRenderer>();
+    }
+
+    public void UpdateIcon(Sprite sprite) {
+        if (tile == null) {
+            return;
+        }
+
+        tile.transform.Find("Icon").GetComponent<SpriteRenderer>().sprite = sprite;
+    }
 }
 
 public class BitmaskSprite {
     public Sprite sprite;
-    public float angle;
+    public int angle;
 
-    public BitmaskSprite(Sprite newSprite, float newAngle) {
+    public BitmaskSprite(Sprite newSprite, int newAngle) {
         sprite = newSprite;
         angle = newAngle;
     }
@@ -183,7 +196,7 @@ public class MapLoader : MonoBehaviour {
                 tiles[x, y].tile = Instantiate(tilePrefab, new Vector3(x, y, 0), Quaternion.identity, transform);
             }
 
-            tiles[x, y].tile.GetComponent<SpriteRenderer>().color = publicTileData[id].tileColor;
+            tiles[x, y].GetMainSprite().color = publicTileData[id].tileColor;
 
         } else {
             if (tiles[x, y].tile != null) {
@@ -197,6 +210,8 @@ public class MapLoader : MonoBehaviour {
 
         bool isWalkable = GetTileData(x, y).walkable;
         path.AddTile(isWalkable, x, y);
+
+        tiles[x, y].UpdateIcon(publicTileData[id].iconSprite);
     }
 
     Color32 GetFullColor(Color32 original) {
@@ -229,9 +244,9 @@ public class MapLoader : MonoBehaviour {
 
                 BitmaskSprite bitmaskSprite = bitmaskSprites[spriteIndex];
 
-                tiles[x, y].tile.GetComponentInChildren<SpriteRenderer>().sprite = bitmaskSprite.sprite;
-                tiles[x, y].tile.transform.rotation = Quaternion.Euler(new Vector3(0, 0, bitmaskSprite.angle));
-
+                SpriteRenderer srend = tiles[x, y].GetMainSprite();
+                srend.sprite = bitmaskSprite.sprite;
+                srend.transform.rotation = Quaternion.Euler(0, 0, bitmaskSprite.angle);
                 //TODO: calculate the collider accordingly
             }
         }
