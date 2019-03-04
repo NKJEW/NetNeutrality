@@ -9,6 +9,7 @@ public class MapTileData {
     public bool usesBitmask;
     public Color tileColor;
     public Sprite iconSprite;
+    public bool isCollectible;
 }
 
 public class GameTile {
@@ -218,7 +219,7 @@ public class MapLoader : MonoBehaviour {
         return new Color32(original.r, original.g, original.b, 255);
     }
 
-    MapTileData GetTileData(int x, int y) {
+    public MapTileData GetTileData(int x, int y) {
         return publicTileData[tiles[x, y].blockTypeId];
     }
 

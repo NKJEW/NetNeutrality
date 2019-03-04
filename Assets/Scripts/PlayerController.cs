@@ -18,7 +18,15 @@ public class PlayerController : MonoBehaviour {
     Vector2Int curMovement = Vector2Int.zero;
     Vector2Int quedMovement = Vector2Int.zero;
 
+    MapLoader map;
+    CollectibleSpawner collectibleSpawner;
+    BarManager bar;
+
 	void Start () {
+        map = FindObjectOfType<MapLoader>();
+        bar = FindObjectOfType<BarManager>();
+        collectibleSpawner = FindObjectOfType<CollectibleSpawner>();
+
         sprite = transform.Find("Sprite");
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         ExecuteMove(false);
@@ -110,5 +118,20 @@ public class PlayerController : MonoBehaviour {
     {
         //float diff = Quaternion.Angle(targetRotation, sprite.rotation);
         sprite.rotation = Quaternion.RotateTowards(sprite.rotation, targetRotation, turnSpeed * Time.deltaTime);
+    }
+
+    void LateUpdate() {
+        
+    }
+
+    void OnTriggerEnter2D(Collider2D other) {
+        if (other.gameObject.CompareTag("Terrain")) {
+            TilePos tilePos = PathfindingMap.WorldToTilePos(other.transform.position);
+            if (map.GetTileData(tilePos.x, tilePos.y).isCollectible) {
+                Destroy(other.gameObject);
+                collectibleSpawner.SpawnCollectible();
+                bar.PickupCollectible();
+            }
+        }
     }
 }
