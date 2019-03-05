@@ -6,6 +6,7 @@ public class PlayerController : MonoBehaviour {
     float speed = 0f;
     public float maxSpeed;
     public float acceleration;
+    bool isStopped;
 
     // rotation
     public float turnSpeed;
@@ -40,9 +41,14 @@ public class PlayerController : MonoBehaviour {
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         ExecuteMove(false);
         sprite.gameObject.SetActive(true);
+        isStopped = false;
     }
 	
 	void Update () {
+        if (isStopped) {
+            return;
+        }
+
         // adjust speed
         if (speed < maxSpeed) {
             speed += acceleration * Time.deltaTime;

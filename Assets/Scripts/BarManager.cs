@@ -17,9 +17,11 @@ public class BarManager : MonoBehaviour {
     bool isStarted;
 
     SpawnManager spawner;
+    CameraController cam;
 
     void Awake() {
         spawner = FindObjectOfType<SpawnManager>();
+        cam = FindObjectOfType<CameraController>();
 
         bufferBar = transform.Find("BufferBar");
         playBar = transform.Find("PlayBar");
@@ -37,9 +39,10 @@ public class BarManager : MonoBehaviour {
     }
 
     public void PickupCollectible() {
-        if (curNumCollectibles == 0) {
-            startTime = Time.time;
+        if (!isStarted) {
+            startTime = Time.time - ((float)curNumCollectibles / numCollectibles) * maxTime;
             isStarted = true;
+            cam.ChangePixelation(1);
         }
 
         curNumCollectibles++;
@@ -75,7 +78,7 @@ public class BarManager : MonoBehaviour {
 
         if (curFrac >= GetBufferFrac()) {
             isStarted = false;
-            GameManager.instance.GameOver();
+            cam.ChangePixelation(-1);
         }
     }
 }
