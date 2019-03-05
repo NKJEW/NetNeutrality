@@ -35,7 +35,15 @@ public class BarManager : MonoBehaviour {
     }
 
     void UpdateBufferBar() {
-        bufferBar.transform.localScale = new Vector3((float)curNumCollectibles/numCollectibles, 1, 1);
+        bufferBar.transform.localScale = new Vector3(GetBufferFrac(), 1, 1);
+    }
+
+    float GetBufferFrac() {
+        return (float)curNumCollectibles / numCollectibles;
+    }
+
+    float GetPlayFrac() {
+        return (Time.time - startTime) / maxTime;
     }
 
     void LateUpdate() {
@@ -49,8 +57,13 @@ public class BarManager : MonoBehaviour {
     }
 
     void UpdatePlayBar() {
-        float curFrac = (Time.time - startTime) / maxTime;
+        float curFrac = Mathf.Clamp01(GetPlayFrac());
         playBar.transform.localScale = new Vector3(curFrac, 1, 1);
         playHead.transform.localPosition = new Vector3((curFrac - 0.5f) * barWidth, playHead.transform.localPosition.y, 0);
+
+        if (curFrac >= GetBufferFrac()) {
+            isStarted = false;
+            GameManager.instance.GameOver();
+        }
     }
 }
