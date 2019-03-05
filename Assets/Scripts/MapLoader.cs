@@ -45,8 +45,6 @@ public class BitmaskSprite {
 }
 
 public class MapLoader : MonoBehaviour {
-    public Texture2D mapTexture;
-
     public MapTileData[] publicTileData;
     public GameObject tilePrefab;
     BitmaskSprite[] bitmaskSprites;
@@ -139,7 +137,6 @@ public class MapLoader : MonoBehaviour {
         bitmaskSprites = LoadBitmaskSprites("Border");
 
         LoadColorDictionary();
-        LoadMap();
     }
 
     void LoadColorDictionary() {
@@ -157,13 +154,13 @@ public class MapLoader : MonoBehaviour {
         }
     }
 
-    void LoadMap() {
+    public void LoadMap(Texture2D newMap) {
         EmptyMap();
 
         //for now load all the tiles
-        Color32[] pixels = mapTexture.GetPixels32();
-        width = mapTexture.width;
-        height = mapTexture.height;
+        Color32[] pixels = newMap.GetPixels32();
+        width = newMap.width;
+        height = newMap.height;
 
         tiles = new GameTile[width, height];
 

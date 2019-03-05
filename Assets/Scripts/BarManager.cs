@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BarManager : MonoBehaviour {
-    public float maxTime;
-    public int numCollectibles;
+    float maxTime;
+    int numCollectibles;
 
     int curNumCollectibles;
     float startTime;
@@ -16,12 +16,24 @@ public class BarManager : MonoBehaviour {
 
     bool isStarted;
 
+    SpawnManager spawner;
+
     void Awake() {
+        spawner = FindObjectOfType<SpawnManager>();
+
         bufferBar = transform.Find("BufferBar");
         playBar = transform.Find("PlayBar");
         playHead = transform.Find("Playhead");
 
         barWidth = Screen.width * 0.8f;
+    }
+
+    public void InitNumCollectibles(int num) {
+        numCollectibles = num;
+    }
+
+    public void InitTime(float newTime) {
+        maxTime = newTime;
     }
 
     public void PickupCollectible() {

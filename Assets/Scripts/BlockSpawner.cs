@@ -7,20 +7,26 @@ public class BlockSpawner : MonoBehaviour {
     public int id;
 
     float nextSpawn;
+    bool isInited;
 
     SpawnManager spawnManager;
 
-	void Start() {
+	void Awake() {
         spawnManager = FindObjectOfType<SpawnManager>();
-        nextSpawn = Time.time + spawnRate;
-
-        if (spawnManager.GetRemainingSpawns(id) == 0) {
-            enabled = false;
-        }
 	}
 
+    public void Init() {
+        if (spawnManager.GetRemainingSpawns(id) == 0) {
+            enabled = false;
+            return;
+        }
+
+
+        isInited = true;
+    }
+
     void Update() {
-        if (Time.time > nextSpawn) {
+        if (isInited && Time.time > nextSpawn) {
             nextSpawn = Time.time + spawnRate;
             if (spawnManager.GetRemainingSpawns(id) == 0) {
                 enabled = false;

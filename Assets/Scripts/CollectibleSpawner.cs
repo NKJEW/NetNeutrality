@@ -4,9 +4,15 @@ using UnityEngine;
 
 public class CollectibleSpawner : MonoBehaviour {
     SpawnManager spawner;
+    BarManager bar;
 
-    void Start() {
+    void Awake() {
         spawner = FindObjectOfType<SpawnManager>();
+        bar = FindObjectOfType<BarManager>();
+    }
+
+    public void Init() {
+        bar.InitNumCollectibles(spawner.GetRemainingSpawns(3));
         SpawnCollectible();
     }
 

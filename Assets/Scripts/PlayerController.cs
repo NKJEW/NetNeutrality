@@ -25,16 +25,22 @@ public class PlayerController : MonoBehaviour {
     Animator animator;
     BarManager bar;
 
-	void Start () {
+	void Awake () {
         map = FindObjectOfType<MapLoader>();
         bar = FindObjectOfType<BarManager>();
         collectibleSpawner = FindObjectOfType<CollectibleSpawner>();
         animator = GetComponent<Animator>();
 
         sprite = transform.Find("Sprite");
+
+        sprite.gameObject.SetActive(false);
+	}
+
+    public void Init() {
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         ExecuteMove(false);
-	}
+        sprite.gameObject.SetActive(true);
+    }
 	
 	void Update () {
         // adjust speed

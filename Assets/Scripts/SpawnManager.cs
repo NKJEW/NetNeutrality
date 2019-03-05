@@ -28,8 +28,6 @@ public class SpawnManager : MonoBehaviour {
         for (int i = 0; i < map.publicTileData.Length; i++) {
             spawns.Add(new List<BlockSpawn>());
         }
-
-        print(spawns.Count);
     }
 
 	public void AddFreeTile(int id, Vector3 pos, int priority) {
