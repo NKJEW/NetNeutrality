@@ -48,6 +48,7 @@ public class MapLoader : MonoBehaviour {
     public MapTileData[] publicTileData;
     public GameObject tilePrefab;
     BitmaskSprite[] bitmaskSprites;
+    public Color32 playerSpawnColor;
 
     Dictionary<Color32, int> colorIds = new Dictionary<Color32, int>();
 
@@ -124,6 +125,7 @@ public class MapLoader : MonoBehaviour {
 
     PathfindingMap path;
     SpawnManager blocker;
+    PlayerController player;
 
     void Awake() {
         //load resources
@@ -132,6 +134,7 @@ public class MapLoader : MonoBehaviour {
 
         path = FindObjectOfType<PathfindingMap>();
         blocker = FindObjectOfType<SpawnManager>();
+        player = FindObjectOfType<PlayerController>();
         blocker.Init(this);
 
         bitmaskSprites = LoadBitmaskSprites("Border");
@@ -179,6 +182,13 @@ public class MapLoader : MonoBehaviour {
                 if (fullColorPixel.Equals(publicTileData[1].fileColor) && currentPixel.a > 0) {
                     LoadTile(x, y, 1);
                 } else {
+                    if (fullColorPixel.Equals(playerSpawnColor)) {
+                        player.transform.position = new Vector3(x, y, 0);
+                        Camera.main.transform.position = new Vector3(x, y, Camera.main.transform.position.z);
+                    }
+
+                    print(fullColorPixel);
+
                     LoadTile(x, y, 0);
                     if (currentPixel.a > 0 && colorIds.ContainsKey(fullColorPixel)) {
                         blocker.AddFreeTile(colorIds[fullColorPixel], new Vector3(x, y, 0), currentPixel.a);

@@ -43,7 +43,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: a1684cb54d98346bfb43b8af14cb183b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  mapTexture: {fileID: 2800000, guid: 85051897e459a4c55a9160cda1fb902d, type: 3}
   publicTileData:
   - fileColor:
       serializedVersion: 2
@@ -67,7 +66,7 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 4278190335
     walkable: 1
-    usesBitmask: 1
+    usesBitmask: 0
     tileColor: {r: 0.76470596, g: 0.20000002, b: 0.5372549, a: 0}
     iconColor: {r: 1, g: 1, b: 1, a: 1}
     iconSprite: {fileID: 21300000, guid: e2d89daa1d46f4102bb23beb6bc21166, type: 3}
@@ -76,7 +75,7 @@ MonoBehaviour:
       serializedVersion: 2
       rgba: 4294901760
     walkable: 1
-    usesBitmask: 1
+    usesBitmask: 0
     tileColor: {r: 0, g: 0, b: 0, a: 0}
     iconColor: {r: 0.30980393, g: 0.92941177, b: 0.76862746, a: 1}
     iconSprite: {fileID: 21300000, guid: 9c77d8fa761984627b6bfc7ace0a04be, type: 3}
@@ -91,3 +90,6 @@ MonoBehaviour:
     iconSprite: {fileID: 21300000, guid: f04024ccba69c4e279bb47302c591487, type: 3}
     isCollectible: 1
   tilePrefab: {fileID: 1774199265240976, guid: ceff57cd2e0714c13998d9b037ab643b, type: 3}
+  playerSpawnColor:
+    serializedVersion: 2
+    rgba: 4294902015
