@@ -124,6 +124,7 @@ GameObject:
   - component: {fileID: 304669936}
   - component: {fileID: 304669938}
   - component: {fileID: 304669937}
+  - component: {fileID: 304669940}
   m_Layer: 0
   m_Name: Player
   m_TagString: Untagged
@@ -143,7 +144,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7c3e96efb3a4f40c19ccc39634bc11a2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 10
+  maxSpeed: 10
+  acceleration: 3
   turnSpeed: 750
 --- !u!61 &304669937
 BoxCollider2D:
@@ -207,6 +209,25 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!95 &304669940
+Animator:
+  serializedVersion: 3
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 304669935}
+  m_Enabled: 1
+  m_Avatar: {fileID: 0}
+  m_Controller: {fileID: 9100000, guid: 2d87ed6e5418747818e6de2368a1c519, type: 2}
+  m_CullingMode: 0
+  m_UpdateMode: 0
+  m_ApplyRootMotion: 0
+  m_LinearVelocityBlending: 0
+  m_WarningMessage: 
+  m_HasTransformHierarchy: 1
+  m_AllowConstantClipSamplingOptimization: 1
+  m_KeepAnimatorControllerStateOnDisable: 0
 --- !u!1 &350576551
 GameObject:
   m_ObjectHideFlags: 0

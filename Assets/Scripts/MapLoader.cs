@@ -233,6 +233,10 @@ public class MapLoader : MonoBehaviour {
         return publicTileData[tile.blockTypeId];
     }
 
+    public GameTile GetTile(int x, int y) {
+        return tiles[x, y];
+    }
+
     void UpdateBitmaskTiles() {
         for (int x = 0; x < width; x++) {
             for (int y = 0; y < height; y++) {

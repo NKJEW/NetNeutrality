@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class PlayerController : MonoBehaviour {
-    public float speed;
+    float speed = 0f;
+    public float maxSpeed;
+    public float acceleration;
 
     // rotation
     public float turnSpeed;
@@ -20,12 +22,14 @@ public class PlayerController : MonoBehaviour {
 
     MapLoader map;
     CollectibleSpawner collectibleSpawner;
+    Animator animator;
     BarManager bar;
 
 	void Start () {
         map = FindObjectOfType<MapLoader>();
         bar = FindObjectOfType<BarManager>();
         collectibleSpawner = FindObjectOfType<CollectibleSpawner>();
+        animator = GetComponent<Animator>();
 
         sprite = transform.Find("Sprite");
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
@@ -33,6 +37,14 @@ public class PlayerController : MonoBehaviour {
 	}
 	
 	void Update () {
+        // adjust speed
+        if (speed < maxSpeed) {
+            speed += acceleration * Time.deltaTime;
+            if (speed > maxSpeed) {
+                speed = maxSpeed;
+            }
+        }
+
         // test for inputs
         if (Input.GetKeyDown(KeyCode.W) || Input.GetKeyDown(KeyCode.UpArrow)) {
             AttemptMove(Vector2Int.up);
@@ -127,11 +139,20 @@ public class PlayerController : MonoBehaviour {
     void OnTriggerEnter2D(Collider2D other) {
         if (other.gameObject.CompareTag("Terrain")) {
             TilePos tilePos = PathfindingMap.WorldToTilePos(other.transform.position);
-            if (map.GetTileData(tilePos.x, tilePos.y).isCollectible) {
+            int tileId = map.GetTile(tilePos.x, tilePos.y).blockTypeId;
+            if (tileId == 3) { // collectible
                 Destroy(other.gameObject);
                 collectibleSpawner.SpawnCollectible();
                 bar.PickupCollectible();
+            } else if (tileId == 2) { // throttle
+                Throttle();
             }
         }
+    }
+
+    public void Throttle ()
+    {
+        speed *= 0.25f;
+        animator.SetTrigger("Throttle");
     }
 }
