@@ -88,7 +88,16 @@ MonoBehaviour:
     tileColor: {r: 0, g: 1, b: 0.14966941, a: 1}
     iconColor: {r: 0, g: 0, b: 0, a: 1}
     iconSprite: {fileID: 21300000, guid: f04024ccba69c4e279bb47302c591487, type: 3}
-    isCollectible: 1
+    isCollectible: 0
+  - fileColor:
+      serializedVersion: 2
+      rgba: 4278255615
+    walkable: 0
+    usesBitmask: 1
+    tileColor: {r: 0.82745105, g: 0, b: 0.5372549, a: 1}
+    iconColor: {r: 0, g: 0, b: 0, a: 1}
+    iconSprite: {fileID: 0}
+    isCollectible: 0
   tilePrefab: {fileID: 1774199265240976, guid: ceff57cd2e0714c13998d9b037ab643b, type: 3}
   playerSpawnColor:
     serializedVersion: 2

@@ -35,10 +35,14 @@ public class BarManager : MonoBehaviour {
 
     public void InitNumCollectibles(int num) {
         numCollectibles = num;
+        curNumCollectibles = 0;
+        UpdateBufferBar();
     }
 
     public void InitTime(float newTime) {
         maxTime = newTime;
+        isStarted = false;
+        UpdatePlayBar(0);
     }
 
     public void PickupCollectible() {
@@ -73,16 +77,16 @@ public class BarManager : MonoBehaviour {
         //}
 
         if (isStarted) {
-            UpdatePlayBar();
+            float curFrac = Mathf.Clamp01(GetPlayFrac());
+            UpdatePlayBar(curFrac);
         }
     }
 
-    void UpdatePlayBar() {
-        float curFrac = Mathf.Clamp01(GetPlayFrac());
-        playBar.transform.localScale = new Vector3(curFrac, 1, 1);
-        playHead.transform.localPosition = new Vector3((curFrac - 0.5f) * barWidth, playHead.transform.localPosition.y, 0);
+    void UpdatePlayBar(float frac) {
+        playBar.transform.localScale = new Vector3(frac, 1, 1);
+        playHead.transform.localPosition = new Vector3((frac - 0.5f) * barWidth, playHead.transform.localPosition.y, 0);
 
-        if (curFrac >= GetBufferFrac()) {
+        if (frac >= GetBufferFrac() && curNumCollectibles > 0) {
             isStarted = false;
             cam.ChangePixelation(-1);
         }

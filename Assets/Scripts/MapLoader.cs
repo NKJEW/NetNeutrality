@@ -10,7 +10,6 @@ public class MapTileData {
     public Color tileColor;
     public Color iconColor;
     public Sprite iconSprite;
-    public bool isCollectible;
 }
 
 public class GameTile {
@@ -227,7 +226,7 @@ public class MapLoader : MonoBehaviour {
     }
 
     Color32 GetFullColor(Color32 original) {
-        return new Color32(original.r, original.g, original.b, 255);
+        return new Color32((byte)(Mathf.RoundToInt(original.r / 255f) * 255), (byte)(Mathf.RoundToInt(original.g / 255f) * 255), (byte)(Mathf.RoundToInt(original.b / 255f) * 255), 255);
     }
 
     public MapTileData GetTileData(int x, int y) {

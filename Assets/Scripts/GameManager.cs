@@ -11,6 +11,7 @@ public class GameManager : MonoBehaviour {
     LevelManager levels;
     CollectibleSpawner collectibleSpawner;
     BarManager bar;
+    SpawnManager spawnManager;
     BlockSpawner[] blockSpawners;
     PlayerController playerController;
 
@@ -21,6 +22,7 @@ public class GameManager : MonoBehaviour {
 
         collectibleSpawner = FindObjectOfType<CollectibleSpawner>();
         blockSpawners = FindObjectsOfType<BlockSpawner>();
+        spawnManager = FindObjectOfType<SpawnManager>();
         playerController = FindObjectOfType<PlayerController>();
 
         bar = FindObjectOfType<BarManager>();
@@ -30,7 +32,14 @@ public class GameManager : MonoBehaviour {
         StartGame(0);
     }
 
+    void Update() {
+        if (Input.GetKeyDown(KeyCode.Space)) {
+            StartGame(1);
+        }
+    }
+
     public void StartGame(int id) {
+        spawnManager.Reset();
         LevelManager.LevelData levelData = levels.levels[id];
         map.LoadMap(levelData.map);
 

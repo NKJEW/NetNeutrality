@@ -30,6 +30,12 @@ public class SpawnManager : MonoBehaviour {
         }
     }
 
+    public void Reset() {
+        for (int i = 0; i < spawns.Count; i++) {
+            spawns[i].Clear();
+        }
+    }
+
 	public void AddFreeTile(int id, Vector3 pos, int priority) {
         spawns[id].Add(new BlockSpawn(pos, priority));
     }
