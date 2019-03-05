@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class BarManager : MonoBehaviour {
     float maxTime;
@@ -12,7 +13,8 @@ public class BarManager : MonoBehaviour {
 
     Transform playBar;
     Transform playHead;
-    Transform bufferBar;
+    Image bufferBar;
+    Image rightEnd;
 
     bool isStarted;
 
@@ -23,9 +25,10 @@ public class BarManager : MonoBehaviour {
         spawner = FindObjectOfType<SpawnManager>();
         cam = FindObjectOfType<CameraController>();
 
-        bufferBar = transform.Find("BufferBar");
+        bufferBar = transform.Find("BufferBar").GetComponent<Image>();
         playBar = transform.Find("PlayBar");
         playHead = transform.Find("Playhead");
+        rightEnd = transform.Find("RightEnd").GetComponent<Image>();
 
         barWidth = Screen.width * 0.8f;
     }
@@ -51,6 +54,9 @@ public class BarManager : MonoBehaviour {
 
     void UpdateBufferBar() {
         bufferBar.transform.localScale = new Vector3(GetBufferFrac(), 1, 1);
+        if (curNumCollectibles == numCollectibles) {
+            rightEnd.color = bufferBar.color;
+        }
     }
 
     float GetBufferFrac() {
