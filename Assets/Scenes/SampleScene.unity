@@ -300,7 +300,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
+  m_Color: {r: 0.30980393, g: 0.92941177, b: 0.76862746, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -361,6 +361,7 @@ MonoBehaviour:
     walkable: 1
     usesBitmask: 0
     tileColor: {r: 0, g: 0, b: 0, a: 0}
+    iconColor: {r: 0, g: 0, b: 0, a: 0}
     iconSprite: {fileID: 0}
     isCollectible: 0
   - fileColor:
@@ -369,14 +370,16 @@ MonoBehaviour:
     walkable: 0
     usesBitmask: 1
     tileColor: {r: 0.6, g: 0.19215688, b: 0.78823537, a: 1}
+    iconColor: {r: 0, g: 0, b: 0, a: 0}
     iconSprite: {fileID: 0}
     isCollectible: 0
   - fileColor:
       serializedVersion: 2
       rgba: 4278190335
-    walkable: 0
+    walkable: 1
     usesBitmask: 1
-    tileColor: {r: 0.76470596, g: 0.20000002, b: 0.5372549, a: 1}
+    tileColor: {r: 0.76470596, g: 0.20000002, b: 0.5372549, a: 0}
+    iconColor: {r: 1, g: 1, b: 1, a: 1}
     iconSprite: {fileID: 21300000, guid: e2d89daa1d46f4102bb23beb6bc21166, type: 3}
     isCollectible: 0
   - fileColor:
@@ -384,8 +387,18 @@ MonoBehaviour:
       rgba: 4294901760
     walkable: 1
     usesBitmask: 1
-    tileColor: {r: 0.5943396, g: 0.5943396, b: 0.5943396, a: 1}
+    tileColor: {r: 0, g: 0, b: 0, a: 0}
+    iconColor: {r: 0.30980393, g: 0.92941177, b: 0.76862746, a: 1}
     iconSprite: {fileID: 21300000, guid: 9c77d8fa761984627b6bfc7ace0a04be, type: 3}
+    isCollectible: 1
+  - fileColor:
+      serializedVersion: 2
+      rgba: 4278255360
+    walkable: 0
+    usesBitmask: 1
+    tileColor: {r: 0, g: 1, b: 0.14966941, a: 1}
+    iconColor: {r: 0, g: 0, b: 0, a: 1}
+    iconSprite: {fileID: 21300000, guid: f04024ccba69c4e279bb47302c591487, type: 3}
     isCollectible: 1
   tilePrefab: {fileID: 1774199265240976, guid: ceff57cd2e0714c13998d9b037ab643b, type: 3}
 --- !u!4 &501537457
@@ -615,7 +628,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 0, b: 0, a: 1}
+  m_Color: {r: 0.92941177, g: 0.30980393, b: 0.30980393, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -960,7 +973,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 1, g: 1, b: 1, a: 1}
+  m_Color: {r: 0.9882353, g: 0.21568628, b: 0.21568628, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:

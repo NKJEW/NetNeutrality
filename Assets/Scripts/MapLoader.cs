@@ -8,6 +8,7 @@ public class MapTileData {
     public bool walkable;
     public bool usesBitmask;
     public Color tileColor;
+    public Color iconColor;
     public Sprite iconSprite;
     public bool isCollectible;
 }
@@ -18,6 +19,10 @@ public class GameTile {
 
     public SpriteRenderer GetMainSprite() {
         return tile.transform.Find("Main").GetComponent<SpriteRenderer>();
+    }
+
+    public SpriteRenderer GetIconSprite() {
+        return tile.transform.Find("Icon").GetComponent<SpriteRenderer>();
     }
 
     public void UpdateIcon(Sprite sprite) {
@@ -198,6 +203,7 @@ public class MapLoader : MonoBehaviour {
             }
 
             tiles[x, y].GetMainSprite().color = publicTileData[id].tileColor;
+            tiles[x, y].GetIconSprite().color = publicTileData[id].iconColor;
 
         } else {
             if (tiles[x, y].tile != null) {
