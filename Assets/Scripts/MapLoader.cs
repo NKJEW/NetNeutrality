@@ -184,7 +184,7 @@ public class MapLoader : MonoBehaviour {
                 } else {
                     LoadTile(x, y, 0);
                     if (currentPixel.a > 0 && colorIds.ContainsKey(fullColorPixel)) {
-                        blocker.AddFreeTile(colorIds[fullColorPixel], new Vector3(x, y, 0), 255);
+                        blocker.AddFreeTile(colorIds[fullColorPixel], new Vector3(x, y, 0), currentPixel.a);
                     }
                 }
             }
