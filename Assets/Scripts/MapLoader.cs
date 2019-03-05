@@ -187,8 +187,6 @@ public class MapLoader : MonoBehaviour {
                         Camera.main.transform.position = new Vector3(x, y, Camera.main.transform.position.z);
                     }
 
-                    print(fullColorPixel);
-
                     LoadTile(x, y, 0);
                     if (currentPixel.a > 0 && colorIds.ContainsKey(fullColorPixel)) {
                         blocker.AddFreeTile(colorIds[fullColorPixel], new Vector3(x, y, 0), currentPixel.a);
