@@ -1,11 +1,14 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
     public float difficulty;
+
+    public GameObject loadingCanvas;
     int curLevelID;
 
     MapLoader map;
@@ -32,6 +35,8 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
+        loadingCanvas.SetActive(false);
+
         StartGame(curLevelID);
     }
 
@@ -59,7 +64,10 @@ public class GameManager : MonoBehaviour {
     }
 
     public void GameOver() {
-        print("uyape");
+        playerController.Stop();
+        camCon.enabled = false;
+
+        loadingCanvas.SetActive(true);
     }
 
     public void GameWin() {
@@ -73,5 +81,9 @@ public class GameManager : MonoBehaviour {
         curLevelID++;
         StartGame(curLevelID);
         camCon.ChangePixelation(1);
+    }
+
+    public void Restart() {
+        SceneManager.LoadScene(0);
     }
 }

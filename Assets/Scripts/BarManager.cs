@@ -23,6 +23,9 @@ public class BarManager : MonoBehaviour {
     SpawnManager spawner;
     CameraController cam;
 
+    bool isPixelating;
+    float pixelEndTime;
+
     void Awake() {
         spawner = FindObjectOfType<SpawnManager>();
         cam = FindObjectOfType<CameraController>();
@@ -57,6 +60,8 @@ public class BarManager : MonoBehaviour {
             cam.ChangePixelation(1);
         }
 
+        isPixelating = false;
+
         curNumCollectibles++;
         UpdateBufferBar();
     }
@@ -87,6 +92,13 @@ public class BarManager : MonoBehaviour {
             float curFrac = Mathf.Clamp01(GetPlayFrac());
             UpdatePlayBar(curFrac);
         }
+
+        if (isPixelating) {
+            if (Time.time > pixelEndTime) {
+                GameManager.instance.GameOver();
+                isPixelating = false;
+            }
+        }
     }
 
     void UpdatePlayBar(float frac) {
@@ -96,6 +108,8 @@ public class BarManager : MonoBehaviour {
         if (frac >= GetBufferFrac() && curNumCollectibles > 0) {
             isRunning = false;
             cam.ChangePixelation(-1);
+            pixelEndTime = Time.time + 3f;
+            isPixelating = true;
         }
     }
 }
