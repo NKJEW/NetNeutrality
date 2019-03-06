@@ -113,8 +113,7 @@ public class PlayerController : MonoBehaviour {
         }
     }
 
-    void AttemptMove (Vector2Int move)
-    {
+    void AttemptMove (Vector2Int move) {
         if (!alreadyMoved) { // tell game manager that player moved at the start of level
             GameManager.instance.StartBlockSpawning();
             alreadyMoved = true;
@@ -137,7 +136,7 @@ public class PlayerController : MonoBehaviour {
     }
 
     bool TileValid(Vector2Int tile) {
-        if (PathfindingMap.CanWalkOnTile(new TilePos(tile.x, tile.y))) {
+        if (PathfindingMap.CanWalkOnTile(new TilePos(tile.x, tile.y)) && (map.GetTile(tile.x, tile.y).blockTypeId != 4 || cash > 0)) {
             return true;
         } else {
             return false;
@@ -146,11 +145,7 @@ public class PlayerController : MonoBehaviour {
 
     bool MoveValid(Vector2Int move) {
         Vector2Int tilePos = lastTile + move;
-        if (PathfindingMap.CanWalkOnTile(new TilePos(tilePos.x, tilePos.y))) {
-            return true;
-        } else {
-            return false;
-        }
+        return TileValid(tilePos);
     }
 
     void UpdateTargetRotation(Vector2Int move) {
@@ -184,7 +179,7 @@ public class PlayerController : MonoBehaviour {
                 bar.PickupCollectible();
             } else if (tileId == 2) { // throttle
                 Throttle();
-            } else if (tileId == 4) { //paywall
+            } else if (tileId == 4 && cash > 0) { //paywall
                 map.RemoveObstacle(tilePos.x, tilePos.y);
                 cash -= 1; //temp
                 UpdateCashText();
