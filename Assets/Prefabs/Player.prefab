@@ -129,6 +129,8 @@ MonoBehaviour:
   maxSpeed: 10
   acceleration: 3
   turnSpeed: 750
+  cashText: {fileID: 0}
+  cash: 10
 --- !u!50 &8466667956631656601
 Rigidbody2D:
   serializedVersion: 4

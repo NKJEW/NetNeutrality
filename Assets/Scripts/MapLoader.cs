@@ -315,7 +315,7 @@ public class MapLoader : MonoBehaviour {
     bool isValidNeighbor(GameTile currentTile, TilePos newTilePos) {
         if ((newTilePos.x >= 0) && (newTilePos.x <= (width - 1)) && (newTilePos.y >= 0) && (newTilePos.y <= (height - 1))) {
             GameTile neighborTile = tiles[newTilePos.x, newTilePos.y];
-            return GetTileData(currentTile).walkable == GetTileData(neighborTile).walkable;;
+            return GetTileData(currentTile).usesBitmask == GetTileData(neighborTile).usesBitmask;
         } else {
             return true;
         }
@@ -339,6 +339,24 @@ public class MapLoader : MonoBehaviour {
         }
 
         UpdateTileBitmask(x, y);
+    }
+
+    public void RemoveObstacle(int x, int y) {
+        LoadTile(x, y, 0);
+
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dy = -1; dy <= 1; dy++) {
+                if ((dx == 0) && (dy == 0))
+                    continue;
+
+                int checkX = x + dx;
+                int checkY = y + dy;
+
+                if ((checkX >= 0) && (checkX < width) && (checkY >= 0) && (checkY < height)) {
+                    UpdateTileBitmask(checkX, checkY);
+                }
+            }
+        }
     }
 
     /*void CreateBackground ()

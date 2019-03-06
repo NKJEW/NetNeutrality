@@ -6,6 +6,7 @@ public class GameManager : MonoBehaviour {
     public static GameManager instance;
 
     public float difficulty;
+    int curLevelID;
 
     MapLoader map;
     LevelManager levels;
@@ -14,6 +15,7 @@ public class GameManager : MonoBehaviour {
     SpawnManager spawnManager;
     BlockSpawner[] blockSpawners;
     PlayerController playerController;
+    CameraController camCon;
 
     void Awake() {
         instance = this;
@@ -24,18 +26,13 @@ public class GameManager : MonoBehaviour {
         blockSpawners = FindObjectsOfType<BlockSpawner>();
         spawnManager = FindObjectOfType<SpawnManager>();
         playerController = FindObjectOfType<PlayerController>();
+        camCon = FindObjectOfType<CameraController>();
 
         bar = FindObjectOfType<BarManager>();
     }
 
     void Start() {
-        StartGame(2);
-    }
-
-    void Update() {
-        if (Input.GetKeyDown(KeyCode.Space)) {
-            StartGame(1);
-        }
+        StartGame(curLevelID);
     }
 
     public void StartGame(int id) {
@@ -63,5 +60,18 @@ public class GameManager : MonoBehaviour {
 
     public void GameOver() {
         print("uyape");
+    }
+
+    public void GameWin() {
+        playerController.Stop();
+        StartCoroutine(GameWinSequence());
+    }
+
+    IEnumerator GameWinSequence() {
+        camCon.ChangePixelation(-1);
+        yield return new WaitUntil(() => !camCon.transitioning);
+        curLevelID++;
+        StartGame(curLevelID);
+        camCon.ChangePixelation(1);
     }
 }

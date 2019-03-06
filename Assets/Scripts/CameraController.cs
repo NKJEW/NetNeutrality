@@ -14,7 +14,7 @@ public class CameraController : MonoBehaviour {
     public int direction = 1;
     public float timer = 0f;
     public float curPixelation = 1f;
-    bool transitioning = false;
+    public bool transitioning { get; private set; }
     PixelateImageEffect pixelationEffect;
     public AnimationCurve pixelationCurve;
 
