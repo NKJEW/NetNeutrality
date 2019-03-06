@@ -50,6 +50,10 @@ public class SpawnManager : MonoBehaviour {
         return -a.spawnPriority.CompareTo(b.spawnPriority);
     }
 
+    public Vector3 GetNextPos(int id) {
+        return spawns[id][0].pos;
+    }
+
     public void PlaceBlock(int id) {
         TilePos tilePos = PathfindingMap.WorldToTilePos(spawns[id][0].pos);
         spawns[id].RemoveAt(0);

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class CollectibleSpawner : MonoBehaviour {
+    public GameObject effect;
+
     SpawnManager spawner;
     BarManager bar;
 
@@ -18,6 +20,8 @@ public class CollectibleSpawner : MonoBehaviour {
 
     public void SpawnCollectible() {
         if (spawner.GetRemainingSpawns(3) > 0) {
+            Instantiate(effect, spawner.GetNextPos(3), Quaternion.identity);
+
             spawner.PlaceBlock(3);
         }
     }

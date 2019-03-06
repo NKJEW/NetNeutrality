@@ -211,6 +211,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe64a81deb30e4a7baabcf9b4b3ec50a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  effect: {fileID: 6963489471672679327, guid: 3c77bf7460d734467a9d6b0cb946db24, type: 3}
 --- !u!4 &350576553
 Transform:
   m_ObjectHideFlags: 0
@@ -303,6 +304,11 @@ PrefabInstance:
       propertyPath: target
       value: 
       objectReference: {fileID: 820357878}
+    - target: {fileID: 3434386590717963368, guid: 930d550c5812447ac953a2052657021c,
+        type: 3}
+      propertyPath: orthographic size
+      value: 30
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 930d550c5812447ac953a2052657021c, type: 3}
 --- !u!1 &571810633
