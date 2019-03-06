@@ -29,7 +29,7 @@ public class GameManager : MonoBehaviour {
     }
 
     void Start() {
-        StartGame(0);
+        StartGame(2);
     }
 
     void Update() {
@@ -43,14 +43,22 @@ public class GameManager : MonoBehaviour {
         LevelManager.LevelData levelData = levels.levels[id];
         map.LoadMap(levelData.map);
 
+        float levelTime = Mathf.Lerp(levelData.easyTime, levelData.hardTime, difficulty);
+
         collectibleSpawner.Init();
         foreach (BlockSpawner spawner in blockSpawners) {
-            spawner.Init();
+            spawner.Init(levelTime);
         }
 
         playerController.Init();
 
-        bar.InitTime(Mathf.Lerp(levelData.easyTime, levelData.hardTime, difficulty));
+        bar.InitTime(levelTime);
+    }
+
+    public void StartBlockSpawning() {
+        foreach (BlockSpawner spawner in blockSpawners) {
+            spawner.StartSpawning();
+        }
     }
 
     public void GameOver() {

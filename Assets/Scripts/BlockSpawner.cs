@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 
 public class BlockSpawner : MonoBehaviour {
+    public float finishBufferRatio;
     public float spawnRate;
     public int id;
 
@@ -15,12 +16,14 @@ public class BlockSpawner : MonoBehaviour {
         spawnManager = FindObjectOfType<SpawnManager>();
 	}
 
-    public void Init() {
+    public void Init(float levelTime) {
+        spawnRate = (levelTime * finishBufferRatio) / spawnManager.GetRemainingSpawns(id);
+    }
+
+    public void StartSpawning() {
         if (spawnManager.GetRemainingSpawns(id) == 0) {
-            enabled = false;
             return;
         }
-
 
         isInited = true;
     }
@@ -29,7 +32,7 @@ public class BlockSpawner : MonoBehaviour {
         if (isInited && Time.time > nextSpawn) {
             nextSpawn = Time.time + spawnRate;
             if (spawnManager.GetRemainingSpawns(id) == 0) {
-                enabled = false;
+                isInited = false;
                 return;
             }
 

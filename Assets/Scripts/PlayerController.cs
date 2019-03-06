@@ -7,6 +7,7 @@ public class PlayerController : MonoBehaviour {
     public float maxSpeed;
     public float acceleration;
     bool isStopped;
+    bool alreadyMoved = false;
 
     // rotation
     public float turnSpeed;
@@ -107,13 +108,32 @@ public class PlayerController : MonoBehaviour {
 
     void AttemptMove (Vector2Int move)
     {
-        if (!MoveValid(move)) {
-            return;
+        if (!alreadyMoved) { // tell game manager that player moved at the start of level
+            GameManager.instance.StartBlockSpawning();
+            alreadyMoved = true;
         }
 
-        quedMovement = move;
-        if (distFromTile < 0.3f) {
-            ExecuteMove(true);
+        if (!MoveValid(move)) { // test immediate move
+            // test future move
+            Vector2Int nextTile = lastTile + curMovement;
+            if (TileValid(nextTile)) {
+                quedMovement = move;
+            } else {
+                return;
+            }
+        } else {
+            quedMovement = move;
+            if (distFromTile < 0.3f) {
+                ExecuteMove(true);
+            }
+        }
+    }
+
+    bool TileValid(Vector2Int tile) {
+        if (PathfindingMap.CanWalkOnTile(new TilePos(tile.x, tile.y))) {
+            return true;
+        } else {
+            return false;
         }
     }
 
