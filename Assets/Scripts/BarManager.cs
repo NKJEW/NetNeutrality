@@ -12,11 +12,13 @@ public class BarManager : MonoBehaviour {
     float barWidth;
 
     Transform playBar;
-    Transform playHead;
+    RectTransform playHead;
     Image bufferBar;
     Image rightEnd;
 
-    bool isStarted;
+    Color backColor;
+
+    bool isRunning;
 
     SpawnManager spawner;
     CameraController cam;
@@ -27,28 +29,31 @@ public class BarManager : MonoBehaviour {
 
         bufferBar = transform.Find("BufferBar").GetComponent<Image>();
         playBar = transform.Find("PlayBar");
-        playHead = transform.Find("Playhead");
+        playHead = transform.Find("Playhead").GetComponent<RectTransform>();
         rightEnd = transform.Find("RightEnd").GetComponent<Image>();
 
-        barWidth = Screen.width * 0.8f;
+        backColor = rightEnd.color;
+
+        barWidth = GetComponentInParent<CanvasScaler>().referenceResolution.x * 0.8f;
     }
 
     public void InitNumCollectibles(int num) {
         numCollectibles = num;
         curNumCollectibles = 0;
+        rightEnd.color = backColor;
         UpdateBufferBar();
     }
 
     public void InitTime(float newTime) {
         maxTime = newTime;
-        isStarted = false;
+        isRunning = false;
         UpdatePlayBar(0);
     }
 
     public void PickupCollectible() {
-        if (!isStarted) {
+        if (!isRunning) {
             startTime = Time.time - ((float)curNumCollectibles / numCollectibles) * maxTime;
-            isStarted = true;
+            isRunning = true;
             cam.ChangePixelation(1);
         }
 
@@ -60,6 +65,8 @@ public class BarManager : MonoBehaviour {
         bufferBar.transform.localScale = new Vector3(GetBufferFrac(), 1, 1);
         if (curNumCollectibles == numCollectibles) {
             rightEnd.color = bufferBar.color;
+            isRunning = false;
+            GameManager.instance.GameWin();
         }
     }
 
@@ -76,7 +83,7 @@ public class BarManager : MonoBehaviour {
         //    PickupCollectible();
         //}
 
-        if (isStarted) {
+        if (isRunning) {
             float curFrac = Mathf.Clamp01(GetPlayFrac());
             UpdatePlayBar(curFrac);
         }
@@ -84,10 +91,10 @@ public class BarManager : MonoBehaviour {
 
     void UpdatePlayBar(float frac) {
         playBar.transform.localScale = new Vector3(frac, 1, 1);
-        playHead.transform.localPosition = new Vector3((frac - 0.5f) * barWidth, playHead.transform.localPosition.y, 0);
+        playHead.anchoredPosition = new Vector3(frac * barWidth, playHead.anchoredPosition.y, 0);
 
         if (frac >= GetBufferFrac() && curNumCollectibles > 0) {
-            isStarted = false;
+            isRunning = false;
             cam.ChangePixelation(-1);
         }
     }
