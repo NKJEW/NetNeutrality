@@ -1,6 +1,7 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class PlayerController : MonoBehaviour {
     float speed = 0f;
@@ -26,6 +27,9 @@ public class PlayerController : MonoBehaviour {
     Animator animator;
     BarManager bar;
 
+    public Text cashText;
+    public int cash;
+
     void Awake() {
         map = FindObjectOfType<MapLoader>();
         bar = FindObjectOfType<BarManager>();
@@ -35,6 +39,8 @@ public class PlayerController : MonoBehaviour {
         sprite = transform.Find("Sprite");
 
         sprite.gameObject.SetActive(false);
+
+        UpdateCashText();
     }
 
     public void Init() {
@@ -156,8 +162,17 @@ public class PlayerController : MonoBehaviour {
                 bar.PickupCollectible();
             } else if (tileId == 2) { // throttle
                 Throttle();
+            } else if (tileId == 4) { //paywall
+                map.RemoveObstacle(tilePos.x, tilePos.y);
+                cash -= 1; //temp
+                UpdateCashText();
+                Destroy(other.gameObject);
             }
         }
+    }
+
+    void UpdateCashText() {
+        cashText.text = "$" + cash.ToString();
     }
 
     public void Throttle() {
