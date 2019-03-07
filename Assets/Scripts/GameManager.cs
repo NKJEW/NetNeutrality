@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     public float difficulty;
 
     public GameObject loadingCanvas;
+    public GameObject gameWinCanvas;
     public GameObject goText;
     int curLevelID;
 
@@ -37,6 +38,7 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         loadingCanvas.SetActive(false);
+        gameWinCanvas.SetActive(false);
         goText.SetActive(false);
 
         StartTutorial();
@@ -109,13 +111,17 @@ public class GameManager : MonoBehaviour {
         camCon.ChangePixelation(-1);
         yield return new WaitUntil(() => !camCon.transitioning);
         curLevelID++;
-        StartGame(curLevelID);
-        camCon.ChangePixelation(1);
-        yield return new WaitUntil(() => !camCon.transitioning);
-        playerController.Unfreeze();
-        collectibleSpawner.Init();
+        if (curLevelID < levels.levels.Length) {
+            StartGame(curLevelID);
+            camCon.ChangePixelation(1);
+            yield return new WaitUntil(() => !camCon.transitioning);
+            playerController.Unfreeze();
+            collectibleSpawner.Init();
 
-        StartCoroutine(GoSequence());
+            StartCoroutine(GoSequence());
+        } else {
+            gameWinCanvas.SetActive(true);
+        }
     }
 
     IEnumerator GoSequence() {
