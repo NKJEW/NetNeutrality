@@ -45,9 +45,13 @@ public class PlayerController : MonoBehaviour {
     }
 
     public void Init() {
+        transform.rotation = Quaternion.identity;
         lastTile = new Vector2Int(Mathf.RoundToInt(transform.position.x), Mathf.RoundToInt(transform.position.y));
         ExecuteMove(false);
         sprite.gameObject.SetActive(true);
+    }
+
+    public void Unfreeze() {
         isStopped = false;
         alreadyMoved = false;
     }
@@ -201,7 +205,6 @@ public class PlayerController : MonoBehaviour {
         speed = 0;
         curMovement = Vector2Int.zero;
         quedMovement = Vector2Int.zero;
-        sprite.rotation = Quaternion.identity;
         isStopped = true;
     }
 }

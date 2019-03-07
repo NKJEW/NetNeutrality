@@ -16,9 +16,12 @@ public class BlockSpawner : MonoBehaviour {
         spawnManager = FindObjectOfType<SpawnManager>();
 	}
 
-    public void Init(float levelTime) {
+    public void Init(float levelTime, bool startAutomatically = false) {
         spawnRate = (levelTime * finishBufferRatio) / spawnManager.GetRemainingSpawns(id);
-        isInited = false;
+        isInited = startAutomatically;
+        if (startAutomatically) {
+            nextSpawn = Time.time;
+        }
     }
 
     public void StartSpawning() {

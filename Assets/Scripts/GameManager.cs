@@ -37,7 +37,33 @@ public class GameManager : MonoBehaviour {
     void Start() {
         loadingCanvas.SetActive(false);
 
-        StartGame(curLevelID);
+        StartTutorial();
+    }
+
+    void StartTutorial() {
+        spawnManager.Reset();
+        LevelManager.LevelData levelData = levels.levels[0];
+        map.LoadMap(levelData.map);
+
+        float levelTime = Mathf.Lerp(levelData.easyTime, levelData.hardTime, difficulty);
+
+        foreach (BlockSpawner spawner in blockSpawners) {
+            spawner.Init(1, true);
+        }
+
+        playerController.Init();
+        playerController.Stop();
+
+        bar.InitNumCollectibles(spawnManager.GetRemainingSpawns(3));
+        bar.InitTime(levelTime);
+
+        StartCoroutine(TutorialSetupSequence());
+    }
+
+    IEnumerator TutorialSetupSequence() {
+        yield return new WaitForSeconds(3f);
+        playerController.Unfreeze();
+        collectibleSpawner.Init();
     }
 
     public void StartGame(int id) {
@@ -47,13 +73,13 @@ public class GameManager : MonoBehaviour {
 
         float levelTime = Mathf.Lerp(levelData.easyTime, levelData.hardTime, difficulty);
 
-        collectibleSpawner.Init();
         foreach (BlockSpawner spawner in blockSpawners) {
             spawner.Init(levelTime);
         }
 
         playerController.Init();
 
+        bar.InitNumCollectibles(spawnManager.GetRemainingSpawns(3));
         bar.InitTime(levelTime);
     }
 
@@ -81,6 +107,9 @@ public class GameManager : MonoBehaviour {
         curLevelID++;
         StartGame(curLevelID);
         camCon.ChangePixelation(1);
+        yield return new WaitUntil(() => !camCon.transitioning);
+        playerController.Unfreeze();
+        collectibleSpawner.Init();
     }
 
     public void Restart() {

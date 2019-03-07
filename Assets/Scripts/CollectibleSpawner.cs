@@ -14,7 +14,6 @@ public class CollectibleSpawner : MonoBehaviour {
     }
 
     public void Init() {
-        bar.InitNumCollectibles(spawner.GetRemainingSpawns(3));
         SpawnCollectible();
     }
 
