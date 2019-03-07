@@ -44,9 +44,12 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
-  - map: {fileID: 2800000, guid: 85051897e459a4c55a9160cda1fb902d, type: 3}
-    easyTime: 0
-    hardTime: 0
-  - map: {fileID: 2800000, guid: 23dab30be4f4946bea716e4d05c18744, type: 3}
-    easyTime: 0
-    hardTime: 0
+  - map: {fileID: 2800000, guid: 34a58187e9aae43c2a7ced6f85af141b, type: 3}
+    easyTime: 60
+    hardTime: 50
+  - map: {fileID: 2800000, guid: fea9319c3ce764e94a845cb55187e465, type: 3}
+    easyTime: 50
+    hardTime: 45
+  - map: {fileID: 2800000, guid: b44c8760158e1498ba862c3699d75652, type: 3}
+    easyTime: 45
+    hardTime: 35
