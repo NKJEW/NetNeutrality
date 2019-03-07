@@ -9,6 +9,7 @@ public class GameManager : MonoBehaviour {
     public float difficulty;
 
     public GameObject loadingCanvas;
+    public GameObject goText;
     int curLevelID;
 
     MapLoader map;
@@ -36,6 +37,7 @@ public class GameManager : MonoBehaviour {
 
     void Start() {
         loadingCanvas.SetActive(false);
+        goText.SetActive(false);
 
         StartTutorial();
     }
@@ -64,6 +66,8 @@ public class GameManager : MonoBehaviour {
         yield return new WaitForSeconds(3f);
         playerController.Unfreeze();
         collectibleSpawner.Init();
+
+        StartCoroutine(GoSequence());
     }
 
     public void StartGame(int id) {
@@ -110,6 +114,18 @@ public class GameManager : MonoBehaviour {
         yield return new WaitUntil(() => !camCon.transitioning);
         playerController.Unfreeze();
         collectibleSpawner.Init();
+
+        StartCoroutine(GoSequence());
+    }
+
+    IEnumerator GoSequence() {
+        goText.transform.position = playerController.transform.position;
+        for (int i = 0; i < 2; i++) {
+            goText.SetActive(true);
+            yield return new WaitForSeconds(0.2f);
+            goText.SetActive(false);
+            yield return new WaitForSeconds(0.2f);
+        }
     }
 
     public void Restart() {
