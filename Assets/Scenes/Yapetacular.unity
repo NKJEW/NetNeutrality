@@ -38,7 +38,7 @@ RenderSettings:
   m_ReflectionIntensity: 1
   m_CustomReflection: {fileID: 0}
   m_Sun: {fileID: 0}
-  m_IndirectSpecularColor: {r: 0.37311918, g: 0.3807398, b: 0.35872716, a: 1}
+  m_IndirectSpecularColor: {r: 0.37311953, g: 0.38074, b: 0.35872698, a: 1}
   m_UseRadianceAmbientProbe: 0
 --- !u!157 &3
 LightmapSettings:
@@ -483,6 +483,21 @@ PrefabInstance:
       propertyPath: m_AnchoredPosition.x
       value: -3.3100586
       objectReference: {fileID: 0}
+    - target: {fileID: 1566431221351570888, guid: 6f1cc2a9591e1464c81c8e676487e1b2,
+        type: 3}
+      propertyPath: m_Enabled
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566431222396606943, guid: 6f1cc2a9591e1464c81c8e676487e1b2,
+        type: 3}
+      propertyPath: m_Color.r
+      value: 0.3137255
+      objectReference: {fileID: 0}
+    - target: {fileID: 1566431222396606943, guid: 6f1cc2a9591e1464c81c8e676487e1b2,
+        type: 3}
+      propertyPath: m_Color.b
+      value: 0.9254902
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 6f1cc2a9591e1464c81c8e676487e1b2, type: 3}
 --- !u!224 &395432321 stripped
@@ -664,7 +679,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 811aaab1800594db19b08a6a2eb2b89f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  difficulty: 0
+  difficulty: 0.25
   loadingCanvas: {fileID: 81990617}
 --- !u!4 &754899846
 Transform:
@@ -919,7 +934,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Material: {fileID: 0}
-  m_Color: {r: 0.58551574, g: 0.990566, b: 0.5653702, a: 1}
+  m_Color: {r: 0.4464255, g: 1, b: 0.4198113, a: 1}
   m_RaycastTarget: 1
   m_OnCullStateChanged:
     m_PersistentCalls:
@@ -929,7 +944,7 @@ MonoBehaviour:
   m_FontData:
     m_Font: {fileID: 10102, guid: 0000000000000000e000000000000000, type: 0}
     m_FontSize: 14
-    m_FontStyle: 0
+    m_FontStyle: 1
     m_BestFit: 1
     m_MinSize: 10
     m_MaxSize: 40
@@ -965,7 +980,7 @@ RectTransform:
   m_AnchorMin: {x: 0.5, y: 0}
   m_AnchorMax: {x: 0.5, y: 0}
   m_AnchoredPosition: {x: 0, y: 5}
-  m_SizeDelta: {x: 160, y: 20}
+  m_SizeDelta: {x: 160, y: 30.33}
   m_Pivot: {x: 0.5, y: 0}
 --- !u!1 &843735914
 GameObject:
@@ -1426,6 +1441,21 @@ PrefabInstance:
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
       objectReference: {fileID: 0}
+    - target: {fileID: 7253566273506920428, guid: dbc8a4a84b5e24c4288eb5eda12b4b4d,
+        type: 3}
+      propertyPath: levels.Array.data[0].hardTime
+      value: 45
+      objectReference: {fileID: 0}
+    - target: {fileID: 7253566273506920428, guid: dbc8a4a84b5e24c4288eb5eda12b4b4d,
+        type: 3}
+      propertyPath: levels.Array.data[1].easyTime
+      value: 58
+      objectReference: {fileID: 0}
+    - target: {fileID: 7253566273506920428, guid: dbc8a4a84b5e24c4288eb5eda12b4b4d,
+        type: 3}
+      propertyPath: levels.Array.data[2].easyTime
+      value: 52
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: dbc8a4a84b5e24c4288eb5eda12b4b4d, type: 3}
 --- !u!1 &1768188959
@@ -1604,6 +1634,31 @@ PrefabInstance:
         type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692788815430557911, guid: add716a25729a4c3d91da01c4a21db07,
+        type: 3}
+      propertyPath: publicTileData.Array.data[4].tileColor.r
+      value: 0.44705883
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692788815430557911, guid: add716a25729a4c3d91da01c4a21db07,
+        type: 3}
+      propertyPath: publicTileData.Array.data[4].tileColor.b
+      value: 0.42352942
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692788815430557911, guid: add716a25729a4c3d91da01c4a21db07,
+        type: 3}
+      propertyPath: publicTileData.Array.data[3].iconColor.r
+      value: 0.30980396
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692788815430557911, guid: add716a25729a4c3d91da01c4a21db07,
+        type: 3}
+      propertyPath: publicTileData.Array.data[3].iconColor.b
+      value: 0.923641
+      objectReference: {fileID: 0}
+    - target: {fileID: 2692788815430557911, guid: add716a25729a4c3d91da01c4a21db07,
+        type: 3}
+      propertyPath: publicTileData.Array.data[3].iconColor.g
+      value: 0.92941177
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: add716a25729a4c3d91da01c4a21db07, type: 3}
