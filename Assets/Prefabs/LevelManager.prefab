@@ -44,12 +44,15 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   levels:
+  - map: {fileID: 2800000, guid: fa14541c4f50848ad92b76f9f167e931, type: 3}
+    easyTime: 100
+    hardTime: 100
   - map: {fileID: 2800000, guid: 34a58187e9aae43c2a7ced6f85af141b, type: 3}
     easyTime: 60
-    hardTime: 50
+    hardTime: 45
   - map: {fileID: 2800000, guid: fea9319c3ce764e94a845cb55187e465, type: 3}
-    easyTime: 50
+    easyTime: 58
     hardTime: 45
   - map: {fileID: 2800000, guid: b44c8760158e1498ba862c3699d75652, type: 3}
-    easyTime: 45
+    easyTime: 52
     hardTime: 35

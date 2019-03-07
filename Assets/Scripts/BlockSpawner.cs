@@ -26,6 +26,7 @@ public class BlockSpawner : MonoBehaviour {
             return;
         }
 
+        nextSpawn = Time.time;
         isInited = true;
     }
 
