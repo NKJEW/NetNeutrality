@@ -65,7 +65,7 @@ public class GameManager : MonoBehaviour {
     }
 
     IEnumerator TutorialSetupSequence() {
-        yield return new WaitForSeconds(3f);
+        yield return new WaitUntil(() => spawnManager.GetRemainingSpawns(5) == 0);
         playerController.Unfreeze();
         collectibleSpawner.Init();
 

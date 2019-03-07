@@ -104,7 +104,7 @@ public class PlayerController : MonoBehaviour {
         lastTile = newTile;
         transform.position = new Vector3(newTile.x, newTile.y, 0f);
 
-        if (quedMovement != Vector2Int.zero) {
+        if (quedMovement != Vector2Int.zero && MoveValid(quedMovement)) {
             curMovement = quedMovement;
             quedMovement = Vector2Int.zero;
         }
